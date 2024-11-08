@@ -1,0 +1,144 @@
+body {
+    background-color: #282b30;
+    background-size: cover;
+    font-family: 'Century Gothic';
+    padding: 0;
+    margin: 0;
+}
+header {
+    background-color: #282b30;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 15px black;
+    width: 100%;
+    position:sticky;
+    top: 0;
+    z-index: 99;
+}
+.mainheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo h1 {
+    position:relative;
+    left: 70px;
+}
+.logo h1 a {
+    text-decoration: none;
+    color: white;
+}
+.search {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    background: #424549;
+    border-radius: 10px;
+    width: 55%;
+    padding-left: 15px;
+}
+.search img {
+    width: 15px;
+    height: 15px;
+}
+.search input {
+    background: #424549;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    color: white;
+    border-radius: 10px;
+}
+.navigation {
+    display: flex;
+    flex-direction: row;
+}
+nav {
+    display: flex;
+    align-items: center;
+}
+nav a {
+    text-align: center;
+    margin: 0 10px;
+    padding: 20px;
+    transition: .5s;
+    color: white;
+    text-decoration: none;
+    transition: .2s;
+    &:hover {
+        box-shadow: 0 0 0 1px white;
+    }
+}
+nav a.active {
+    box-shadow: 0 0 0 1px white;
+    pointer-events: none;
+}
+nav a.button {
+    background-color: #664343;
+    border-radius: 25px;
+    padding: 10px 50px;
+    margin: 0px 30px 0 20px;
+    transition: .7s;
+    &:hover {
+        background-color: #795757;
+        cursor: pointer;
+    }
+}
+
+main {
+    display: flex;
+    justify-content: center;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    background-color: #1e2124;
+    color: white;
+    width: 35%;
+    border-radius: 15px;
+    padding: 20px;
+}
+.profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #424549;
+    margin: 10px 0 10px 0;
+    border-radius: 15px;
+}
+.details, .followStatus {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 30px 10px 30px;
+}
+.details img {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+}
+.details a {
+    text-decoration: none;
+    color: white;
+}
+.details p a.viewprofile {
+    margin-left: 20px;
+}
+a.followOn, a.followOff {
+    text-decoration: none;
+    color: white;
+    border: 1px solid white;
+    border-radius: 15px;
+    padding: 0 20px 0 20px;
+    transition: .5s;
+    &:hover {
+        background-color: #664343;
+    }
+}

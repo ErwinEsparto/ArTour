@@ -1,0 +1,299 @@
+body {
+    background-color: #282b30;
+    background-size: cover;
+    font-family: 'Century Gothic';
+    padding: 0;
+    margin: 0;
+}
+header {
+    background-color: #282b30;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 15px black;
+    width: 100%;
+    position:sticky;
+    top: 0;
+    z-index: 99;
+}
+.mainheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo h1 {
+    position:relative;
+    left: 70px;
+}
+.logo h1 a {
+    text-decoration: none;
+    color: white;
+}
+.search {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    background: #424549;
+    border-radius: 10px;
+    width: 55%;
+    padding-left: 15px;
+}
+.search img {
+    width: 15px;
+    height: 15px;
+}
+.search input {
+    background: #424549;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    color: white;
+    border-radius: 10px;
+}
+.navigation {
+    display: flex;
+    flex-direction: row;
+}
+nav {
+    display: flex;
+    align-items: center;
+}
+nav a {
+    text-align: center;
+    margin: 0 10px;
+    padding: 20px;
+    transition: .5s;
+    color: white;
+    text-decoration: none;
+    transition: .2s;
+    &:hover {
+        box-shadow: 0 0 0 1px white;
+    }
+}
+nav a.active {
+    box-shadow: 0 0 0 1px white;
+    pointer-events: none;
+}
+nav a.button {
+    background-color: #664343;
+    border-radius: 25px;
+    padding: 10px 50px;
+    margin: 0px 30px 0 20px;
+    transition: .7s;
+    &:hover {
+        background-color: #795757;
+        cursor: pointer;
+    }
+}
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+.post {
+    background-color: #424549;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    padding: 20px;
+    margin: 20px 20px 10px 0;
+    border-radius: 15px;
+}
+.post img {
+    width: 100%;
+    height: auto;
+}
+.post p {
+    padding: 30px;
+}
+.details {
+    background-color: #424549;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 70%;
+    padding: 20px;
+    margin: 10px 20px 20px 0;
+    border-radius: 15px;
+}
+.uploader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.uploader img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-right: 20px;
+}
+.picture h1 a {
+    text-decoration: none;
+    color: white;
+}
+.picture h1 {
+    margin: 10px 0 0 0;
+}
+.actions, .actions, .actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.actions a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    border: 1px solid white;
+    padding: 10px 40px 10px 40px;
+    margin: 10px 20px 10px 20px;
+    border-radius: 25px;
+    transition: .5s;
+}
+a.likeOn, a.followOn {
+    background-color: #664343;
+    &:hover {
+        background-color: #795757;
+    }
+}
+a.likeOff, a.followOff {
+    &:hover {
+        background-color:#664343;
+        border: 1px solid white;
+    }
+}
+a.likesTotal {
+    background-color: white;
+    color: black;
+    pointer-events: none;
+}
+a.deleteAction {
+    &:hover {
+        background-color: maroon;
+    }
+}
+a.editAction {
+    &:hover {
+        background-color: #282b30;
+    }
+}
+.actions img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+.postCategories {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    margin: 0
+}
+.postCategories p {
+    background-color: #664343;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 0 10px 0 0;
+}
+p.date {
+    padding: 0 0 10px 0;
+    margin: 0;
+}
+a.cat {
+    text-decoration: none;
+}
+.actions.ownerActions a {
+    margin: 5px;
+}
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 400px;
+}
+.otherPosts {
+    width: 70%;
+    padding: 20px;
+    margin: 10px 0px 20px 0;
+    border-radius: 15px;
+}
+.otherPost {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 20%;
+    margin-left: 5px;
+    height: 100%;
+    overflow: hidden;
+
+    position: relative;
+}
+.viewOtherPost {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.otherPost img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.otherPost:hover .otherUploads {
+    opacity: 1;
+}
+.otherUploads {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+}
+.otherUploadsProfile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 10px 0 20px;
+}
+.otherUploadsProfile p {
+    margin: 0 10px 0 10px;
+    color: white;
+}
+.uploadDetails {
+    display: flex;
+    flex-direction: column;
+}
+.otherUploadsProfile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+}
+.otherPostCategories {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px 0 10px 10px;
+}
+.otherPostCategories p {
+    background-color: #664343;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 0 0 10px 10px;
+}

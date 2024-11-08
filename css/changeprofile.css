@@ -1,0 +1,199 @@
+body {
+    background-color: #282b30;
+    background-size: cover;
+    font-family: 'Century Gothic';
+    padding: 0;
+    margin: 0;
+}
+header {
+    background-color: #282b30;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 15px black;
+    width: 100%;
+    position:sticky;
+    top: 0;
+    z-index: 99;
+}
+.mainheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo h1 {
+    position:relative;
+    left: 70px;
+}
+.logo h1 a {
+    text-decoration: none;
+    color: white;
+}
+.search {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    background: #424549;
+    border-radius: 10px;
+    width: 55%;
+    padding-left: 15px;
+}
+.search img {
+    width: 15px;
+    height: 15px;
+}
+.search input {
+    background: #424549;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    color: white;
+    border-radius: 10px;
+}
+.navigation {
+    display: flex;
+    flex-direction: row;
+}
+nav {
+    display: flex;
+    align-items: center;
+}
+nav a {
+    text-align: center;
+    margin: 0 10px;
+    padding: 20px;
+    transition: .5s;
+    color: white;
+    text-decoration: none;
+    transition: .2s;
+    &:hover {
+        box-shadow: 0 0 0 1px white;
+    }
+}
+nav a.active {
+    box-shadow: 0 0 0 1px white;
+    pointer-events: none;
+}
+nav a.button {
+    background-color: #664343;
+    border-radius: 25px;
+    padding: 10px 50px;
+    margin: 0px 30px 0 20px;
+    transition: .7s;
+    &:hover {
+        background-color: #795757;
+        cursor: pointer;
+    }
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 20px;
+}
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px 80px;
+    margin: 20px;
+    height: 100%;
+    background-color: #1e2124;
+    color: white;
+    box-shadow: 0px 0px 5px black;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.profile {
+    display: flex;
+    flex-direction: row;
+    padding: 30px 0 30px 0;
+}
+.profile input {
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    font-size: 1.1em;
+    padding-left: 20px;
+    color: white;
+    background-color: transparent;
+}
+.profile img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+}
+.details {
+    display: flex;
+    flex-direction: column;
+}
+form input#description, form input#uploadimage, form input[type="submit"]{
+    background: #424549;
+    padding: 15px;
+    margin-bottom: 30px;
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    font-size: 1em;
+    color: white;
+    border-radius: 10px;
+}
+form input[type="submit"] {
+    background-color: #664343;
+    color: white;
+    padding: 15px;
+    border: none;
+    width: 100%;
+    border-radius: 15px;
+    transition: .7s;
+    &:hover {
+        background-color: #795757;
+        cursor: pointer;
+    }
+}
+.return {
+    text-align: center;
+}
+.form a{
+    text-decoration: none;
+    color: white;
+    &:hover {
+        text-decoration: underline;
+        color: #795757;
+        cursor: pointer;
+    }
+}
+form img#uploadedimage {
+    width: 500px;
+    height: auto;
+    display: none;
+    padding-bottom: 20px;
+}
+form p.success{
+    color: green;
+    margin-top: -10px;
+    text-align: center;
+}
+form p.error{
+    color: red;
+    margin-top: -10px;
+    text-align: center;
+}
+a.profileLink {
+    margin: 0;
+    padding: 0;
+}
