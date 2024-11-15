@@ -39,7 +39,7 @@
                 <input type="text" id="number" name="number" placeholder="Contact Number" required>
 
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="password" id="password" minlength="8" name="password" placeholder="Password" required>
                 
                 <input type="submit" name="submit" value="Register">
 
