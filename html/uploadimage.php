@@ -111,40 +111,49 @@
                             $imageCategory1 = $_POST["category1"];
                             $imageCategory2 = $_POST["category2"];
                             $imageCategory3 = $_POST["category3"];
+                            $date = date('mdY');
+                            $fileExtension = pathinfo($imageFile, PATHINFO_EXTENSION);
+                            $newImageFile = pathinfo($imageFile, PATHINFO_FILENAME) . "_" . $date . "_" .time(). "." . $fileExtension;
                             $userId = $account["profileId"];
 
                             $imageTempName = $_FILES["image"]["tmp_name"];
-                            $folder = "../posts/".$imageFile;
+                            $folder = "../posts/";
 
-                            if ($imageCategory1!=$imageCategory2 && $imageCategory1!=$imageCategory3 && $imageCategory2 != $imageCategory3) {
-                                $uploadImg = "INSERT INTO images (imageName, imageDescription, uploadDate, userId) VALUES ('$imageFile', '$imageDescription', NOW(), '$userId')";
-                                mysqli_query($conn, $uploadImg);
+                            if ($fileExtension=='jpg' || $fileExtension=="JPG" || $fileExtension=="png" || $fileExtension=="PNG" ){
+                                if ($imageCategory1!=$imageCategory2 && $imageCategory1!=$imageCategory3 && $imageCategory2 != $imageCategory3) {
+                                    $uploadImg = "INSERT INTO images (imageName, imageDescription, uploadDate, userId) VALUES ('$newImageFile', '$imageDescription', NOW(), '$userId')";
+                                    mysqli_query($conn, $uploadImg);
 
-                                $getUploadedImg = "SELECT MAX(imageId) AS imageId FROM images";
-                                $uploadedImgResult = mysqli_query($conn, $getUploadedImg);
-                                $uploadedImg = mysqli_fetch_assoc($uploadedImgResult);
+                                    $getUploadedImg = "SELECT MAX(imageId) AS imageId FROM images";
+                                    $uploadedImgResult = mysqli_query($conn, $getUploadedImg);
+                                    $uploadedImg = mysqli_fetch_assoc($uploadedImgResult);
 
-                                $addCategory1 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory1')";
-                                mysqli_query($conn, $addCategory1);
+                                    $addCategory1 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory1')";
+                                    mysqli_query($conn, $addCategory1);
 
-                                if ($imageCategory2!="None") {
-                                    $addCategory2 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory2')";
-                                    mysqli_query($conn, $addCategory2);
+                                    if ($imageCategory2!="None") {
+                                        $addCategory2 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory2')";
+                                        mysqli_query($conn, $addCategory2);
+                                    }
+
+                                    if ($imageCategory3!="None1"){
+                                        $addCategory3 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory3')";
+                                        mysqli_query($conn, $addCategory3);
+                                    }
+                                    
+                                    $imageFilePath = $folder . $newImageFile;
+                                    if (move_uploaded_file($imageTempName, $imageFilePath)) {
+                                        echo "<p class='success'> Uploaded successfully. </p>";
+                                    } else {
+                                        echo "<p class='error'> Failed to Upload </p>";
+                                    }
                                 }
-
-                                if ($imageCategory3!="None1"){
-                                    $addCategory3 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory3')";
-                                    mysqli_query($conn, $addCategory3);
-                                }
-                                
-                                if (move_uploaded_file($imageTempName, $folder)) {
-                                    echo "<p class='success'> Uploaded successfully. </p>";
-                                } else {
-                                    echo "<p class='error'> Failed to Upload </p>";
+                                else {
+                                    echo "<p class='error'> Please differentiate each category. </p>";
                                 }
                             }
                             else {
-                                echo "<p class='error'> Please differentiate each category. </p>";
+                                echo "<p class='error'> Only JPG/PNG images allowed. </p>";
                             }
                         }
                     ?>
