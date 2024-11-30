@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 08, 2024 at 05:22 PM
+-- Generation Time: Nov 30, 2024 at 08:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -50,7 +50,10 @@ INSERT INTO `categories` (`imageId`, `category`) VALUES
 (47, 'Game'),
 (47, 'Digital'),
 (49, 'Animal'),
-(49, 'Photography');
+(49, 'Photography'),
+(53, 'Game'),
+(55, 'Game'),
+(55, 'Digital');
 
 -- --------------------------------------------------------
 
@@ -105,7 +108,8 @@ INSERT INTO `images` (`imageId`, `imageName`, `imageDescription`, `uploadDate`, 
 (34, 'sculpture.jpg', '💪', '2024-11-07 23:51:20', 1),
 (43, 'drawing.jpg', 'Wow', '2024-11-08 22:43:03', 2),
 (47, 'game.jpg', '', '2024-11-08 22:52:35', 1),
-(49, 'dog.jpg', '&lt;3', '2024-11-08 23:22:55', 1);
+(49, 'dog.jpg', '&lt;3', '2024-11-08 23:22:55', 1),
+(55, 'malenia_11292024_1732881723.jpg', 'Elden Ring', '2024-11-29 20:02:03', 1);
 
 -- --------------------------------------------------------
 
@@ -148,18 +152,20 @@ CREATE TABLE `users` (
   `profileInstagram` varchar(255) NOT NULL,
   `profileX` varchar(255) NOT NULL,
   `profilePicture` varchar(255) NOT NULL,
-  `dateCreated` date NOT NULL
+  `dateCreated` date NOT NULL,
+  `resetToken` varchar(64) DEFAULT NULL,
+  `resetTokenExpire` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`profileId`, `profileName`, `profilePassword`, `profileDescription`, `profileAddress`, `profileEmail`, `profileNumber`, `profileFacebook`, `profileInstagram`, `profileX`, `profilePicture`, `dateCreated`) VALUES
-(1, 'Erwin Esparto', '123', 'Time is gold when you&#039;re watching...', 'Philippines', 'erwinesparto@gmail.com', '09123456789', 'Erwin Esparto', 'irwennn', 'Irwen', 'erwin.jpg', '2024-11-05'),
-(2, 'Jaspher Baet', '111', 'Nothing lasts forever.', 'USA', 'jaspherbaet@gmail.com', '09876543211', 'Jaspher Baet', 'Jaskuno', 'Jaskuno', 'baet.jpg', '2024-11-06'),
-(4, 'Kenneth Odgien', '321', '', 'Canada', 'kennethodgien@gmail.com', '09567123811', '', '', '', 'odgien.png', '2024-11-06'),
-(5, 'Lilac Goodrich', '213', '', 'Japan', 'lilacgoodrich@gmail.com', '09189381289', '', '', '', 'goodrich.jpg', '2024-11-06');
+INSERT INTO `users` (`profileId`, `profileName`, `profilePassword`, `profileDescription`, `profileAddress`, `profileEmail`, `profileNumber`, `profileFacebook`, `profileInstagram`, `profileX`, `profilePicture`, `dateCreated`, `resetToken`, `resetTokenExpire`) VALUES
+(1, 'Erwin Esparto', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Time is gold when you&#039;re watching...', 'Philippines', 'kingpsycho15@gmail.com', '09123456789', 'Erwin Esparto', 'irwennn', 'Irwen', 'omen_11292024_1732881620.jpg', '2024-11-05', NULL, NULL),
+(2, 'Jaspher Baet', '111', 'Nothing lasts forever.', 'USA', 'jasbaet09@gmail.com', '09876543211', 'Jaspher Baet', 'Jaskuno', 'Jaskuno', 'baet.jpg', '2024-11-06', NULL, NULL),
+(4, 'Kenneth Odgien', '321', '', 'Canada', 'kennethodgien@gmail.com', '09567123811', '', '', '', 'odgien.png', '2024-11-06', NULL, NULL),
+(5, 'Lilac Goodrich', '213', '', 'Japan', 'lilacgoodrich@gmail.com', '09189381289', '', '', '', 'goodrich.jpg', '2024-11-06', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -187,7 +193,8 @@ ALTER TABLE `likes`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`profileId`);
+  ADD PRIMARY KEY (`profileId`),
+  ADD UNIQUE KEY `resetToken` (`resetToken`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -203,7 +210,7 @@ ALTER TABLE `follow`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `likes`
@@ -215,7 +222,7 @@ ALTER TABLE `likes`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `profileId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `profileId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
