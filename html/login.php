@@ -47,20 +47,26 @@
                         $email = $_POST["email"];
                         $password = $_POST["password"];
 
-                        $getUser = "SELECT * FROM users WHERE profileEmail='$email' AND profilePassword='$password';";
+                        $getUser = "SELECT * FROM users WHERE profileEmail='$email'";
                         $userResult = mysqli_query($conn, $getUser);
 
                         if (mysqli_num_rows($userResult) == 1) {
                             $user=mysqli_fetch_assoc($userResult);
+                            $userPassword = $user['profilePassword'];
 
-                            $_SESSION['userId'] = $user['profileId'];
-                            $_SESSION['loggedIn'] = true;
-
-                            header("location: home.php");
-                            exit();
+                            if (password_verify($password, $userPassword)){
+                                $_SESSION['userId'] = $user['profileId'];
+                                $_SESSION['loggedIn'] = true;
+    
+                                header("location: home.php");
+                                exit();
+                            }
+                            else {
+                                echo "<p class='result'> Invalid Password. </p>";
+                            }
                         } 
                         else {
-                            echo "<p class='result'> Invalid credentials. </p>";
+                            echo "<p class='result'> Email Not Found. </p>";
                         }
                     }
                 ?>

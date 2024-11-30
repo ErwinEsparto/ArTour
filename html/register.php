@@ -50,9 +50,10 @@
                         $address = $_POST["address"];
                         $number = $_POST["number"];
                         $password = $_POST["password"];
+                        $encryptPassword = password_hash($password, PASSWORD_BCRYPT);
 
                         $registerUser = "INSERT INTO users (profileName, profilePassword, profileAddress, profileEmail, profileNumber, profileFacebook, profileInstagram, profileX, profilePicture, dateCreated) 
-                        VALUES ('$name', '$password', '$address', '$email', '$number', 'Not Available', 'Not Available', 'Not Available', 'default.jpg', curdate())";
+                        VALUES ('$name', '$encryptPassword', '$address', '$email', '$number', 'Not Available', 'Not Available', 'Not Available', 'default.jpg', curdate())";
                         $addUser = mysqli_query($conn, $registerUser);
                         echo "<p class='result'> Successfully Registered. </p>";
                     }

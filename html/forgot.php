@@ -27,40 +27,42 @@
                 
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" placeholder="Email Address" required>
-
-                <label for="number"> Contact Number </label>
-                <input type="text" id="number" name="number" placeholder="Contact Number" required>
-
-                <label for="newPassword"> New Password </label>
-                <input type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
-
-                <label for="confirmPassword"> New Password </label>
-                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm New Password" required>
                 
                 <input type="submit" name="submit" value="Recover">
 
                 <?php 
                     if(isset($_POST["submit"])){
                         $email = $_POST["email"];
-                        $number = $_POST["number"];
-                        $newPassword = $_POST["newPassword"];
-                        $confirmPassword = $_POST["confirmPassword"];
 
-                        $recoverUser = "SELECT * FROM users WHERE profileEmail='$email' AND profileNumber='$number'";
+                        $recoverUser = "SELECT * FROM users WHERE profileEmail='$email'";
                         $result = mysqli_query($conn, $recoverUser);
                         
-                        if ($newPassword != $confirmPassword) {
-                            echo "<p class='error'> New passwords are not the same. </p>";
-                        }
-                        else if (mysqli_num_rows($result) == 1) {
-                            $user=mysqli_fetch_assoc($result);
-                            $profileId = $user["profileId"];
+                        if (mysqli_num_rows($result) == 1) {
+                            $token = bin2hex(random_bytes(16));
+                            $tokenHash = hash("sha256", $token);
+                            $tokenExpire = date("Y-m-d H:i:s", time() + 60 * 30);
 
-                            mysqli_query($conn, "UPDATE users SET profilePassword='$confirmPassword' WHERE profileId='$profileId'");
-                            echo "<p class='success'> Account recovered successfully. </p>";
+                            $addToken = "UPDATE users SET resetToken='$tokenHash', resetTokenExpire='$tokenExpire' WHERE profileEmail='$email'";
+                            $tokenResult = mysqli_query($conn, $addToken);
+
+                            $mail = require __DIR__ . "/mailer.php";
+                            $mail->setFrom("noreply@artour.com", "ArTour");
+                            $mail->addAddress($email);
+                            $mail->Subject = "Password Reset";
+                            $mail->Body = <<<END
+                            Click <a href="http://localhost/artour/html/passwordreset.php?token=$token">here</a> to reset your password.
+                            END;
+
+                            try{
+                                $mail->send();
+                                echo "<p class='success'> Please check your inbox to recover password. </p>";
+                            }
+                            catch (Exception $e) {
+                                echo "<p class='error'> Message could not be sent. Mailer error: {$mail->ErrorInfo}</p>";
+                            }
                         } 
                         else {
-                            echo "<p class='error'> Account not found. </p>";
+                            echo "<p class='error'> Email not found. </p>";
                         }
                     }
                 ?>

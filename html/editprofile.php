@@ -68,7 +68,7 @@
                     <h1> Profile Description</h1>
 
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Type something..." required><?php echo $account['profileDescription']; ?></textarea>
+                    <textarea id="description" name="description" placeholder="Type something..." ><?php echo $account['profileDescription']; ?></textarea>
 
                     <h1> Socials </h1>
                     
@@ -90,10 +90,10 @@
                         <input type="password" id="current" name="current" placeholder="Current Password">
 
                         <label for="new">New Password</label>
-                        <input type="password" id="new" name="new" placeholder="New Password">
+                        <input type="password" id="new" name="new" minlength="8" placeholder="New Password">
 
                         <label for="confirm">Confirm Password</label>
-                        <input type="password" id="confirm" name="confirm" placeholder="Confirm Password">
+                        <input type="password" id="confirm" name="confirm" minlength="8" placeholder="Confirm Password">
                     </div>
                     <div class="actions">
                         <input type="submit" name="submit" value="Save Changes">
@@ -103,6 +103,7 @@
                                 $currentPassword = $_POST["current"];
                                 $newPassword = $_POST["new"];
                                 $confirmPassword = $_POST["confirm"];
+                                $encryptPassword = password_hash($confirmPassword, PASSWORD_BCRYPT);
 
                                 if (empty($currentPassword) && empty($newPassword) && empty($confirmPassword)) {
                                     $name = $_POST["name"];
@@ -121,8 +122,8 @@
                                     header("refresh: 1; url = profile.php");
                                 }
                                 else{
-                                    $checkPassword = "SELECT * FROM users WHERE profilePassword='$currentPassword' AND profileId='".$_SESSION['userId']."'";
-                                    $result = mysqli_query($conn, $checkPassword);
+                                    $checkUser = "SELECT * FROM users WHERE profileId='".$_SESSION['userId']."'";
+                                    $userResult = mysqli_query($conn, $checkUser);
 
                                     if (empty($newPassword) || empty($confirmPassword)) {
                                         echo "<p class='error'> New passwords must not be empty. </p>";
@@ -130,19 +131,41 @@
                                     else if ($newPassword != $confirmPassword) {
                                         echo "<p class='error'> New passwords are not the same. </p>";
                                     }
-                                    else if ($currentPassword == $confirmPassword) {
-                                        echo "<p class='error'> New password must not be the old password. </p>";
-                                    } 
-                                    else if (mysqli_num_rows($result) == 1) {
-                                        mysqli_query($conn, "UPDATE users SET profilePassword='$confirmPassword' WHERE profileId='".$_SESSION['userId']."'");
-                                        echo "<p class='success'> Saved Successfully. </p>";
-                                        header("refresh: 1; url = profile.php");
+                                    else if (mysqli_num_rows($userResult) == 1) {
+                                        $foundUser=mysqli_fetch_assoc($userResult);
+                                        $userOldPassword = $foundUser['profilePassword'];
+
+                                        if (!password_verify($confirmPassword, $userOldPassword)) {
+                                            if(password_verify($currentPassword, $userOldPassword)){
+                                                $name = $_POST["name"];
+                                                $address = $_POST["address"];
+                                                $email = $_POST["email"];
+                                                $number = $_POST["number"];
+                                                $description = htmlspecialchars(trim($_POST['description']));
+                                                $facebook = $_POST["facebook"];
+                                                $instagram = $_POST["instagram"];
+                                                $x = $_POST["x"];
+
+                                                $saveChanges = "UPDATE users SET profileName='$name', profileDescription='$description', profileAddress='$address', profileEmail='$email',
+                                                profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
+                                                $saveUser = mysqli_query($conn, $saveChanges);
+
+                                                mysqli_query($conn, "UPDATE users SET profilePassword='$encryptPassword' WHERE profileId='".$_SESSION['userId']."'");
+                                                echo "<p class='success'> Saved Successfully. </p>";
+                                                header("refresh: 1; url = profile.php");
+                                            }
+                                            else {
+                                                echo "<p class='error'> Current Password Incorrect. </p>";
+                                            }
+                                        } 
+                                        else {
+                                            echo "<p class='error'> New password must not be the old password. </p>";
+                                        }
                                     } 
                                     else {
                                         echo "<p class='error'> Current Password Incorrect. </p>";
                                     }
                                 }
-                                
                             }
                         ?>
 

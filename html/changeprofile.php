@@ -76,9 +76,12 @@
                                 $getOldImg = "SELECT profilePicture FROM users WHERE profileId='".$_SESSION['userId']."'";
                                 $oldImageResult = mysqli_query($conn, $getOldImg);
                                 $oldImage = mysqli_fetch_assoc($oldImageResult);
-                                $oldImageLocation = '../profiles/'.$oldImage['profilePicture'];
-                                unlink($oldImageLocation);
 
+                                if($oldImage['profilePicture']!='default.jpg'){
+                                    $oldImageLocation = '../profiles/'.$oldImage['profilePicture'];
+                                    unlink($oldImageLocation);
+                                }
+                                
                                 $uploadImg = "UPDATE users SET profilePicture='$newImageFile' WHERE profileId='".$_SESSION['userId']."'";
                                 $saveProfile = mysqli_query($conn, $uploadImg);
     
