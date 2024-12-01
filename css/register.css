@@ -60,10 +60,23 @@ main {
         cursor: pointer;
     }
 }
-.form form p.result{
-    color: green;
-    margin-top: -10px;
+.form form p.success{
+    background-color: #41ab5d;
+    border: 3px solid #005a32;
+    color: white;
     text-align: center;
+    width: 100%;
+    padding: 10px 0 10px 0;
+    margin-top: -5px;
+}
+.form form p.error{
+    background-color: #ef3b2c;
+    border: 3px solid #a50f15;
+    color: white;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0 10px 0;
+    margin-top: -5px;
 }
 .return {
     text-align: center;

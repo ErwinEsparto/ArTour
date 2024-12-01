@@ -115,11 +115,29 @@
                                     $instagram = $_POST["instagram"];
                                     $x = $_POST["x"];
 
-                                    $saveChanges = "UPDATE users SET profileName='$name', profileDescription='$description', profileAddress='$address', profileEmail='$email',
-                                    profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
-                                    $saveUser = mysqli_query($conn, $saveChanges);
-                                    echo "<p class='success'> Saved Successfully. </p>";
-                                    header("refresh: 1; url = profile.php");
+                                    if ($account['profileEmail']==$email){
+                                        $saveChanges = "UPDATE users SET profileName='$name', profileDescription='$description', profileAddress='$address', profileEmail='$email',
+                                        profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
+                                        $saveUser = mysqli_query($conn, $saveChanges);
+                                        echo "<p class='success'> Saved Successfully. </p>";
+                                        header("refresh: 1; url = profile.php");
+                                    }
+                                    else {
+                                        $checkEmail = "SELECT * FROM users WHERE profileEmail='$email'";
+                                        $emailResult = mysqli_query($conn, $checkEmail);
+                                        $isExist = mysqli_num_rows($emailResult);
+
+                                        if ($isExist==0){
+                                            $saveChanges = "UPDATE users SET profileName='$name', profileDescription='$description', profileAddress='$address', profileEmail='$email',
+                                            profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
+                                            $saveUser = mysqli_query($conn, $saveChanges);
+                                            echo "<p class='success'> Saved Successfully. </p>";
+                                            header("refresh: 1; url = profile.php");
+                                        }
+                                        else {
+                                            echo "<p class='error'> Email is already taken. </p>";
+                                        }
+                                    }
                                 }
                                 else{
                                     $checkUser = "SELECT * FROM users WHERE profileId='".$_SESSION['userId']."'";
@@ -146,13 +164,29 @@
                                                 $instagram = $_POST["instagram"];
                                                 $x = $_POST["x"];
 
-                                                $saveChanges = "UPDATE users SET profileName='$name', profileDescription='$description', profileAddress='$address', profileEmail='$email',
-                                                profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
-                                                $saveUser = mysqli_query($conn, $saveChanges);
-
-                                                mysqli_query($conn, "UPDATE users SET profilePassword='$encryptPassword' WHERE profileId='".$_SESSION['userId']."'");
-                                                echo "<p class='success'> Saved Successfully. </p>";
-                                                header("refresh: 1; url = profile.php");
+                                                if ($account['profileEmail']==$email){
+                                                    $saveChanges = "UPDATE users SET profileName='$name', profilePassword='$encryptPassword', profileDescription='$description', profileAddress='$address', profileEmail='$email',
+                                                    profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
+                                                    $saveUser = mysqli_query($conn, $saveChanges);
+                                                    echo "<p class='success'> Saved Successfully. </p>";
+                                                    header("refresh: 1; url = profile.php");
+                                                }
+                                                else {
+                                                    $checkEmail = "SELECT * FROM users WHERE profileEmail='$email'";
+                                                    $emailResult = mysqli_query($conn, $checkEmail);
+                                                    $isExist = mysqli_num_rows($emailResult);
+            
+                                                    if ($isExist==0){
+                                                        $saveChanges = "UPDATE users SET profileName='$name', profilePassword='$encryptPassword', profileDescription='$description', profileAddress='$address', profileEmail='$email',
+                                                        profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
+                                                        $saveUser = mysqli_query($conn, $saveChanges);
+                                                        echo "<p class='success'> Saved Successfully. </p>";
+                                                        header("refresh: 1; url = profile.php");
+                                                    }
+                                                    else {
+                                                        echo "<p class='error'> Email is already taken. </p>";
+                                                    }
+                                                }
                                             }
                                             else {
                                                 echo "<p class='error'> Current Password Incorrect. </p>";

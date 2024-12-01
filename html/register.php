@@ -36,7 +36,7 @@
                 <input type="text" id="address" name="address" placeholder="Address" required>
 
                 <label for="number">Contact Number</label>
-                <input type="text" id="number" name="number" placeholder="Contact Number" required>
+                <input type="text" id="number" name="number" maxlength="11" placeholder="Contact Number" required>
 
                 <label for="password">Password</label>
                 <input type="password" id="password" minlength="8" name="password" placeholder="Password" required>
@@ -52,10 +52,20 @@
                         $password = $_POST["password"];
                         $encryptPassword = password_hash($password, PASSWORD_BCRYPT);
 
-                        $registerUser = "INSERT INTO users (profileName, profilePassword, profileAddress, profileEmail, profileNumber, profileFacebook, profileInstagram, profileX, profilePicture, dateCreated) 
-                        VALUES ('$name', '$encryptPassword', '$address', '$email', '$number', 'Not Available', 'Not Available', 'Not Available', 'default.jpg', curdate())";
-                        $addUser = mysqli_query($conn, $registerUser);
-                        echo "<p class='result'> Successfully Registered. </p>";
+                        $isExist = "SELECT * FROM users WHERE profileEmail='$email'";
+                        $checkExist = mysqli_query($conn, $isExist);
+                        $row = mysqli_num_rows($checkExist);
+
+                        if ($row == 0) {
+                            $registerUser = "INSERT INTO users (profileName, profilePassword, profileAddress, profileEmail, profileNumber, profileFacebook, profileInstagram, profileX, profilePicture, dateCreated) 
+                            VALUES ('$name', '$encryptPassword', '$address', '$email', '$number', 'Not Available', 'Not Available', 'Not Available', 'default.jpg', curdate())";
+                            $addUser = mysqli_query($conn, $registerUser);
+                            echo "<p class='success'> Successfully Registered. </p>";
+                            header("refresh: 1.5; url = login.php");
+                        }
+                        else {
+                            echo "<p class='error'> Email address already taken. </p>";
+                        } 
                     }
                 ?>
 
