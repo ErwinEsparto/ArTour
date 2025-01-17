@@ -100,17 +100,18 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 70%;
+    width: auto;
     padding: 20px;
     margin: 20px 20px 10px 0;
     border-radius: 15px;
+    height: 84vh;
 }
 .post img {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 90%;
 }
 .post p {
-    padding: 30px;
+    padding: 20px;
 }
 .details {
     background-color: #424549;
