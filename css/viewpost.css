@@ -120,7 +120,7 @@ main {
     justify-content: space-between;
     width: 70%;
     padding: 20px;
-    margin: 10px 20px 20px 0;
+    margin: 10px 0 20px 0;
     border-radius: 15px;
 }
 .uploader {
@@ -212,6 +212,80 @@ a.cat {
 }
 .actions.ownerActions a {
     margin: 5px;
+}
+.commentSection {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    background-color: #424549;
+    padding: 20px;
+    margin: 10px 0px 20px 0;
+    border-radius: 15px;
+}
+.commentSection h1 {
+    margin: 10px 0 20px 0;
+}
+.commentSection img {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+}
+.commentor form {
+    display: flex;
+    flex-direction: row;
+}
+.commentor form input {
+    background: #282b30;
+    padding: 15px;
+    width: 100%;
+    margin-left: 10px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    color: white;
+    border-radius: 10px;
+}
+.commentor form input[type="submit"] {
+    background-color: #664343;
+    color: white;
+    padding: 15px;
+    border: none;
+    width: 10%;
+    border-radius: 15px;
+    transition: .7s;
+    &:hover {
+        background-color: #795757;
+        cursor: pointer;
+    }
+}
+.comments {
+    display: flex;
+    flex-direction: column;
+}
+.commentorSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 15px 0 0 20px;
+}
+.comment{
+    background: #282b30;
+    padding: 15px;
+    margin: 0 0 0 10px;
+    border-radius: 15px 15px 15px 0;
+}
+p.commentDate, p.comment {
+    padding: 0;
+    margin: 0;
+    color: gainsboro;
+}
+a.commentorName {
+    color: gainsboro;
+    text-decoration: none;
+}
+p.commentDate {
+    margin: 0 0 0 10px;
 }
 .container {
     display: flex;

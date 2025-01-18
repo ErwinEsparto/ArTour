@@ -35,7 +35,8 @@
         
             <div class="navigation">
                 <nav class="sections">
-                    <a class="active" href="#"> Upload an Image </a>
+                    <a href="#"> Upload </a>
+                    <a href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
                     <a class="button" href="logout.php"> Logout </a>
                 </nav>

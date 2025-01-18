@@ -58,7 +58,8 @@
                     <?php
                         if ($loggedIn === true){
                             echo '  
-                                <a href="uploadimage.php"> Upload an Image </a>
+                                <a href="uploadimage.php"> Upload </a>
+                                <a href="chats.php"> Chats </a>
                                 <a href="home.php"> Home </a>
                                 <a class="button" href="logout.php"> Logout </a>
                             ';
@@ -172,7 +173,9 @@
                                 <div class='postCategories'>";
                                     if($categoryCollection>0){
                                         while ($category = mysqli_fetch_assoc($categoriesResult)){
-                                            echo " <p> ".$category['category']." </p> ";
+                                            if($category['category']!='None'){
+                                                echo " <p> ".$category['category']." </p> ";
+                                            }
                                         }
                                     }
                         echo"   </div>

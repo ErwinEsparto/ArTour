@@ -56,7 +56,8 @@
         
             <div class="navigation">
                 <nav class="sections">
-                    <a href="uploadimage.php"> Upload an Image </a>
+                    <a href="uploadimage.php"> Upload </a>
+                    <a href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
                     <a class="button" href="logout.php"> Logout </a>
                 </nav>
@@ -129,7 +130,7 @@
                         $categoryCollection = mysqli_num_rows($categoriesResult);
                         
                         $uploadDate = strtotime($image['uploadDate']);
-                        $formatDate = date("m/d/y g:i A", $uploadDate);
+                        $formatDate = date("M j, Y g:i A", $uploadDate);
                         echo "
                         <div class='post'> 
                             <a class='viewpost' href='viewpost.php?post=".$image['imageId']."'>
@@ -141,7 +142,9 @@
                                 <div class='postCategories'>";
                                     if($categoryCollection>0){
                                         while ($category = mysqli_fetch_assoc($categoriesResult)){
-                                            echo " <p> ".$category['category']." </p> ";
+                                            if($category['category']!='None'){
+                                                echo " <p> ".$category['category']." </p> ";
+                                            }
                                         }
                                     }
                         echo"   </div>

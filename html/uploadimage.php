@@ -35,7 +35,8 @@
         
             <div class="navigation">
                 <nav class="sections">
-                    <a class="active" href="#"> Upload an Image </a>
+                    <a class="active" href="#"> Upload </a>
+                    <a href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
                     <a class="button" href="logout.php"> Logout </a>
                 </nav>
@@ -50,7 +51,7 @@
                         <a class="profileLink" href="profile.php"><img src="../profiles/<?php echo $account['profilePicture']; ?>"  alt=""> </a>
                         <div class="details">
                             <input type="text" id="name" name="name" value="<?php echo $account['profileName']; ?>" readonly>
-                            <input type="text" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" readonly>
+                            <input type="text" id="date" name="date" value="<?php echo date('M j, Y'); ?>" readonly>
                         </div>
                     </div>
 
@@ -131,13 +132,15 @@
                                     $addCategory1 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory1')";
                                     mysqli_query($conn, $addCategory1);
 
-                                    if ($imageCategory2!="None") {
-                                        $addCategory2 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory2')";
-                                        mysqli_query($conn, $addCategory2);
-                                    }
+                                    $addCategory2 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory2')";
+                                    mysqli_query($conn, $addCategory2);
 
                                     if ($imageCategory3!="None1"){
                                         $addCategory3 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory3')";
+                                        mysqli_query($conn, $addCategory3);
+                                    }
+                                    else {
+                                        $addCategory3 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", 'None')";
                                         mysqli_query($conn, $addCategory3);
                                     }
                                     

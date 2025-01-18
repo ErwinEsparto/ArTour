@@ -78,7 +78,8 @@
                     <?php
                         if ($loggedIn === true){
                             echo '  
-                                <a href="uploadimage.php"> Upload an Image </a>
+                                <a href="uploadimage.php"> Upload </a>
+                                <a href="chats.php"> Chats </a>
                                 <a href="home.php"> Home </a>
                                 <a class="button" href="logout.php"> Logout </a>
                             ';
@@ -120,7 +121,7 @@
                     <p> 
                         <?php 
                             $uploadDate = strtotime($uploader['uploadDate']);
-                            $formatDate = date("m/d/y g:i A", $uploadDate);
+                            $formatDate = date("F j, Y g:i A", $uploadDate);
                             echo "<p class='date'> $formatDate </p>"; 
 
                             $getCategories = "SELECT * FROM categories WHERE imageId='$_GET[post]'";
@@ -130,7 +131,9 @@
                             echo "<div class='postCategories'>";
                                     if($categoryCollection>0){
                                         while ($category = mysqli_fetch_assoc($categoriesResult)){
-                                            echo " <a class='cat' href='home.php?category=".$category['category']."'> <p> ".$category['category']." </p> </a>";
+                                            if($category['category']!='None'){
+                                                echo " <a class='cat' href='home.php?category=".$category['category']."'> <p> ".$category['category']." </p> </a>";
+                                            }
                                         }
                                     }
                             echo "</div>";
@@ -173,7 +176,7 @@
                                     echo"
                                         <a class='followOff' href='addFollowStatus.php?followId=".$uploader['profileId']."'>
                                             <img src='../images/followOff.png'/>
-                                            <p> Follow </p>
+                                            <p> Follow ".$uploader['profileName']." </p>
                                         </a>
                             </div>
                                 ";
@@ -184,7 +187,7 @@
                             <div class='actions'>
                                 <a class='likeOff' href='addLikeStatus.php?likePostId=".$_GET['post']."'>
                                     <img src='../images/likeOff.png'/>
-                                    <p class='active'> Like </p>
+                                    <p class='active'> Like Post </p>
                                 </a>";
                                 if ($followStatus==1) {
                                     echo"
@@ -199,7 +202,7 @@
                                     echo"
                                         <a class='followOff' href='addFollowStatus.php?followId=".$uploader['profileId']."'>
                                             <img src='../images/followOff.png'/>
-                                            <p> Follow </p>
+                                            <p> Follow ".$uploader['profileName']." </p>
                                         </a>
                             </div>
                                 ";
@@ -213,7 +216,7 @@
                                         <img src='../images/likes.png'/>
                                         <p class='active'> ".$totalLikes." Likes </p>
                                 </a>
-                                <a class='editAction' href='editpost.php?postId=".$_GET['post']."'>
+                                <a class='editAction' href='editpost.php?post=".$_GET['post']."'>
                                     <img src='../images/delete.png'/>
                                     <p class='followed'> Edit </p>
                                  </a>
@@ -226,6 +229,70 @@
                 }
             ?>
         </div>
+        <div class="commentSection">
+            <h1> Comments </h1>
+            <div class="commentor">
+                <form method="POST">
+                    <?php 
+                        $getCommentor = "SELECT * FROM users WHERE profileId=".$_SESSION['userId']."";
+                        $commentorResult = mysqli_query($conn, $getCommentor);
+                        $commentor = mysqli_fetch_assoc($commentorResult);
+                        echo "<a class='ownerComment' href='profile.php'><img src='../profiles/".$commentor['profilePicture']."' alt=''></a>"; 
+                    ?>
+                    <input type="text" id="comment" name="comment" placeholder="Type something..." required>
+                    <input type="submit" name="submit" value="Comment">
+                </form>
+                <?php 
+                    if(isset($_POST["submit"])){
+                        $newComment = $_POST["comment"];
+
+                        $addNewComment = "INSERT INTO comments (comment, commentorId, postId, dateCommented) VALUES ('$newComment', ".$_SESSION['userId'].", '$_GET[post]', curdate())";
+                        $addComment = mysqli_query($conn, $addNewComment);
+                    }
+                ?>
+            </div>
+            <div class="comments">
+                <?php
+                    $getComments = "SELECT * FROM comments INNER JOIN users 
+                    ON comments.commentorId=users.profileId WHERE postId='$_GET[post]' ORDER BY dateCommented DESC";
+                    $commentsResult = mysqli_query($conn, $getComments);
+                    $commentsRow = mysqli_num_rows($commentsResult);
+                    
+
+                    if($commentsRow>0) {
+                        while ($comment = mysqli_fetch_assoc($commentsResult)){
+                            $commentDate = strtotime($comment['dateCommented']);
+                            $commentFormatDate = date("M j, Y", $commentDate)."<br>".date("g:i A", $commentDate);
+                            echo "
+                                <div class='commentorSection'> ";
+
+                                if ($comment['profileId']!=$_SESSION['userId']){
+                                    echo "
+                                    <a class='otherComment' href='viewprofile.php?profile=".$comment['profileId']."'><img src='../profiles/".$comment['profilePicture']."' alt=''></a>
+                                    <div class='comment'>
+                                    <b><a class='commentorName' href='viewprofile.php?profile=".$comment['profileId']."'> ".$comment['profileName']." </a></b>";
+                                }
+                                else {
+                                    echo "
+                                    <a class='otherComment' href='profile.php?profile=".$comment['profileId']."'><img src='../profiles/".$comment['profilePicture']."' alt=''></a>
+                                    <div class='comment'>
+                                    <b><a class='commentorName' href='profile.php?profile=".$comment['profileId']."'> ".$comment['profileName']." </a></b>";
+                                }
+                                echo "
+                                        <p class='comment'> ".$comment['comment']." </p>
+                                    </div>  
+                                    <div class='commentDetails'>
+                                        <p class='commentDate'> $commentFormatDate </p>
+                                    </div>
+                                    
+                                </div>
+                            ";
+
+                        }
+                    }
+                ?>
+            </div>
+        </div>
         <div class="otherPosts">
             <h1> <?php echo $uploader['profileName']; ?>'s Other Uploads</h1>
             <div class="container">
@@ -234,7 +301,7 @@
                 INNER JOIN users 
                 ON images.userId=users.profileId
                 WHERE userId='".$uploader['profileId']."'
-                ORDER BY uploadDate DESC";
+                AND imageId!='$_GET[post]' ORDER BY uploadDate DESC";
                 $imageResult = mysqli_query($conn, $getImages);
                 $images = mysqli_num_rows($imageResult);
 
@@ -262,7 +329,9 @@
                                 <div class='otherPostCategories'>";
                                     if($categoryCollection>0){
                                         while ($category = mysqli_fetch_assoc($categoriesResult)){
-                                            echo " <p> ".$category['category']." </p> ";
+                                            if($category['category']!='None'){
+                                                echo " <p> ".$category['category']." </p> ";
+                                            }
                                         }
                                     }
                         echo"   </div>
