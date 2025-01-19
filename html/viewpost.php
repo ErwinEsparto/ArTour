@@ -231,26 +231,33 @@
         </div>
         <div class="commentSection">
             <h1> Comments </h1>
-            <div class="commentor">
-                <form method="POST">
-                    <?php 
-                        $getCommentor = "SELECT * FROM users WHERE profileId=".$_SESSION['userId']."";
-                        $commentorResult = mysqli_query($conn, $getCommentor);
-                        $commentor = mysqli_fetch_assoc($commentorResult);
-                        echo "<a class='ownerComment' href='profile.php'><img src='../profiles/".$commentor['profilePicture']."' alt=''></a>"; 
-                    ?>
-                    <input type="text" id="comment" name="comment" placeholder="Type something..." required>
-                    <input type="submit" name="submit" value="Comment">
-                </form>
-                <?php 
+            <?php
+                if (isset($_SESSION['userId'])){
+                    $getCommentor = "SELECT * FROM users WHERE profileId=".$_SESSION['userId']."";
+                    $commentorResult = mysqli_query($conn, $getCommentor);
+                    $commentor = mysqli_fetch_assoc($commentorResult);
+                    echo "
+                        <div class='commentor'>
+                            <form method='POST'>
+                                echo '<a class='ownerComment' href='profile.php'><img src='../profiles/".$commentor['profilePicture']."' alt=''></a>'; 
+                                <input type='text' id='comment' name='comment' placeholder='Type something...' required>
+                                <input type='submit' name='submit' value='Comment'>
+                            </form>
+                        </div>
+                    ";
                     if(isset($_POST["submit"])){
                         $newComment = $_POST["comment"];
 
-                        $addNewComment = "INSERT INTO comments (comment, commentorId, postId, dateCommented) VALUES ('$newComment', ".$_SESSION['userId'].", '$_GET[post]', curdate())";
+                        $addNewComment = "INSERT INTO comments (comment, commentorId, postId, dateCommented) VALUES ('$newComment', ".$_SESSION['userId'].", '$_GET[post]', now())";
                         $addComment = mysqli_query($conn, $addNewComment);
                     }
-                ?>
-            </div>
+                }
+                else {
+                    echo '';
+                }
+            ?>
+            
+            
             <div class="comments">
                 <?php
                     $getComments = "SELECT * FROM comments INNER JOIN users 
@@ -266,7 +273,13 @@
                             echo "
                                 <div class='commentorSection'> ";
 
-                                if ($comment['profileId']!=$_SESSION['userId']){
+                                if ($loggedIn===false){
+                                    echo "
+                                    <a class='otherComment' href='viewprofile.php?profile=".$comment['profileId']."'><img src='../profiles/".$comment['profilePicture']."' alt=''></a>
+                                    <div class='comment'>
+                                    <b><a class='commentorName' href='viewprofile.php?profile=".$comment['profileId']."'> ".$comment['profileName']." </a></b>";
+                                }
+                                else if ($comment['profileId']!=$_SESSION['userId']){
                                     echo "
                                     <a class='otherComment' href='viewprofile.php?profile=".$comment['profileId']."'><img src='../profiles/".$comment['profilePicture']."' alt=''></a>
                                     <div class='comment'>
