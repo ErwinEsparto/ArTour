@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 18, 2025 at 10:45 AM
+-- Generation Time: Jan 23, 2025 at 10:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -53,8 +53,9 @@ INSERT INTO `categories` (`categoryId`, `imageId`, `category`) VALUES
 (13, 49, 'Animal'),
 (14, 49, 'Photography'),
 (15, 53, 'Game'),
-(16, 55, 'Game'),
-(17, 55, 'Digital');
+(21, 57, 'Game'),
+(22, 57, 'Digital'),
+(23, 57, 'None');
 
 -- --------------------------------------------------------
 
@@ -123,7 +124,6 @@ INSERT INTO `follow` (`followId`, `followerId`, `followStatus`, `followedId`) VA
 (13, 4, 1, 2),
 (15, 5, 1, 1),
 (22, 4, 1, 1),
-(25, 1, 1, 4),
 (26, 1, 1, 2),
 (27, 1, 1, 5);
 
@@ -138,6 +138,7 @@ CREATE TABLE `images` (
   `imageName` varchar(255) NOT NULL,
   `imageDescription` varchar(255) NOT NULL,
   `uploadDate` datetime NOT NULL,
+  `reportStatus` int(11) NOT NULL,
   `userId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -145,18 +146,18 @@ CREATE TABLE `images` (
 -- Dumping data for table `images`
 --
 
-INSERT INTO `images` (`imageId`, `imageName`, `imageDescription`, `uploadDate`, `userId`) VALUES
-(24, 'abstract.jpg', 'Hmm', '2024-11-07 23:45:52', 4),
-(25, 'digital.jpg', '...', '2024-11-07 23:46:24', 4),
-(26, 'architecture.jpg', '(づ ◕‿◕ )づ', '2024-11-07 23:46:59', 5),
-(28, 'nature.jpg', '(⌐■_■)', '2024-11-07 23:48:01', 5),
-(29, 'painting.jpg', 'Amazing', '2024-11-07 23:48:48', 2),
-(31, 'photography.jpg', 'Impressive', '2024-11-07 23:49:27', 2),
-(34, 'sculpture.jpg', '💪', '2024-11-07 23:51:20', 1),
-(43, 'drawing.jpg', 'Wow', '2024-11-08 22:43:03', 2),
-(47, 'game.jpg', '', '2024-11-08 22:52:35', 1),
-(49, 'dog.jpg', '&lt;3', '2024-11-08 23:22:55', 1),
-(55, 'malenia_11292024_1732881723.jpg', 'Elden Ring', '2024-11-29 20:02:03', 1);
+INSERT INTO `images` (`imageId`, `imageName`, `imageDescription`, `uploadDate`, `reportStatus`, `userId`) VALUES
+(24, 'abstract.jpg', 'Hmm', '2024-11-07 23:45:52', 0, 4),
+(25, 'digital.jpg', '...', '2024-11-07 23:46:24', 1, 4),
+(26, 'architecture.jpg', '(づ ◕‿◕ )づ', '2024-11-07 23:46:59', 0, 5),
+(28, 'nature.jpg', '(⌐■_■)', '2024-11-07 23:48:01', 0, 5),
+(29, 'painting.jpg', 'Amazing', '2024-11-07 23:48:48', 0, 2),
+(31, 'photography.jpg', 'Impressive', '2024-11-07 23:49:27', 0, 2),
+(34, 'sculpture.jpg', '💪', '2024-11-07 23:51:20', 0, 1),
+(43, 'drawing.jpg', 'Wow', '2024-11-08 22:43:03', 0, 2),
+(47, 'game.jpg', '', '2024-11-08 22:52:35', 0, 1),
+(49, 'dog.jpg', '&lt;3', '2024-11-08 23:22:55', 0, 1),
+(57, 'malenia_11292024_1732881723_01232025_1737625318.jpg', 'Elden Ring', '2025-01-23 17:41:58', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -189,6 +190,7 @@ INSERT INTO `likes` (`likeId`, `imageId`, `likeStatus`, `profileId`) VALUES
 
 CREATE TABLE `users` (
   `profileId` int(11) NOT NULL,
+  `profileType` int(11) NOT NULL,
   `profileName` varchar(255) NOT NULL,
   `profilePassword` varchar(255) NOT NULL,
   `profileDescription` varchar(255) NOT NULL,
@@ -208,11 +210,12 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`profileId`, `profileName`, `profilePassword`, `profileDescription`, `profileAddress`, `profileEmail`, `profileNumber`, `profileFacebook`, `profileInstagram`, `profileX`, `profilePicture`, `dateCreated`, `resetToken`, `resetTokenExpire`) VALUES
-(1, 'Erwin Esparto', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Time is gold when you&#039;re watching...', 'Philippines', 'kingpsycho15@gmail.com', '09123456789', 'Erwin Esparto', 'irwennn', 'Irwen', 'omen_12012024_1733029099.jpg', '2024-11-05', '5ee36d76d16ccc35ad2116ada31ad800cba86087acb44e7717d916f649b23370', '2025-01-03 17:25:52'),
-(2, 'Jaspher Baet', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Nothing lasts forever.', 'USA', 'jasbaet09@gmail.com', '09876543211', 'Jaspher Baet', 'Jaskuno', 'Jaskuno', 'baet.jpg', '2024-11-06', NULL, NULL),
-(4, 'Kenneth Odgien', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', '', 'Canada', 'kennethodgien@gmail.com', '09567123811', '', '', '', 'odgien.png', '2024-11-06', NULL, NULL),
-(5, 'Lilac Goodrich', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', '', 'Japan', 'lilacgoodrich@gmail.com', '09189381289', '', '', '', 'goodrich.jpg', '2024-11-06', NULL, NULL);
+INSERT INTO `users` (`profileId`, `profileType`, `profileName`, `profilePassword`, `profileDescription`, `profileAddress`, `profileEmail`, `profileNumber`, `profileFacebook`, `profileInstagram`, `profileX`, `profilePicture`, `dateCreated`, `resetToken`, `resetTokenExpire`) VALUES
+(1, 2, 'Erwin Esparto', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Time is gold when you&#039;re watching...', 'Philippines', 'kingpsycho15@gmail.com', '09123456789', 'Erwin Esparto', 'irwennn', 'Irwen', 'omen_12012024_1733029099.jpg', '2024-11-05', '5ee36d76d16ccc35ad2116ada31ad800cba86087acb44e7717d916f649b23370', '2025-01-03 17:25:52'),
+(2, 2, 'Jaspher Baet', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Nothing lasts forever.', 'USA', 'jasbaet09@gmail.com', '09876543211', 'Jaspher Baet', 'Jaskuno', 'Jaskuno', 'baet.jpg', '2024-11-06', NULL, NULL),
+(4, 2, 'Kenneth Odgien', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', '', 'Canada', 'kennethodgien@gmail.com', '09567123811', '', '', '', 'odgien.png', '2024-11-06', NULL, NULL),
+(5, 2, 'Lilac Goodrich', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', '', 'Japan', 'lilacgoodrich@gmail.com', '09189381289', '', '', '', 'goodrich.jpg', '2024-11-06', NULL, NULL),
+(13, 1, 'ArTour', '$2y$10$4HNmfJkRXk2dbIAehNfrWuvmi02vmx7iPOuIz4cXF/l8mXfYaS8vi', '', 'Philippines', 'artour@gmail.com', '09912039102', 'ArTour', 'ArTour', 'ArTour', 'default.jpg', '2025-01-23', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -269,7 +272,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `chats`
@@ -287,25 +290,25 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT for table `follow`
 --
 ALTER TABLE `follow`
-  MODIFY `followId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `followId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `likeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `likeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `profileId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `profileId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

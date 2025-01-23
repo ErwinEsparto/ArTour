@@ -64,11 +64,17 @@
             <div class="navigation">
                 <nav class="sections">
                 <?php
-                    if ($loggedIn == true){
+                    if ($loggedIn == true && $_SESSION['userType']==2){
                         echo '  
                             <a href="uploadimage.php"> Upload </a>
                             <a href="chats.php"> Chats </a>
                             <a href="profile.php"> Profile </a>
+                            <a class="button" href="logout.php"> Logout </a>
+                        ';
+                    }
+                    else if ($loggedIn == true && $_SESSION['userType']==1){
+                        echo '  
+                            <a href="reports.php"> Reports </a>
                             <a class="button" href="logout.php"> Logout </a>
                         ';
                     }

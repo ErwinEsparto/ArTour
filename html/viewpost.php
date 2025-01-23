@@ -76,10 +76,17 @@
             <div class="navigation">
                 <nav class="sections">
                     <?php
-                        if ($loggedIn === true){
+                        if ($loggedIn === true && $_SESSION['userType']==2){
                             echo '  
                                 <a href="uploadimage.php"> Upload </a>
                                 <a href="chats.php"> Chats </a>
+                                <a href="home.php"> Home </a>
+                                <a class="button" href="logout.php"> Logout </a>
+                            ';
+                        }
+                        else if ($loggedIn == true && $_SESSION['userType']==1){
+                            echo '  
+                                <a href="reports.php"> Reports </a>
                                 <a href="home.php"> Home </a>
                                 <a class="button" href="logout.php"> Logout </a>
                             ';
@@ -146,7 +153,17 @@
                 if($loggedIn===false) {
                     echo "";
                 }
+                else if ($_SESSION['userType']==1) {
+                    echo "
+                        <div class='actions ownerActions'>
+                            <a class='deleteAction' href='viewpost.php?deletePostId=".$_GET['post']."'>
+                                <img src='../images/delete.png'/>
+                                <p class='followed'> Delete </p>
+                            </a>
+                        </div>
+                    ";
 
+                }
                 else if ($uploader['profileId'] != $_SESSION['userId']){
                     $getLikeStatus = "SELECT * FROM likes WHERE profileId='".$_SESSION['userId']."' AND imageId='$_GET[post]'";
                     $likeStatusResult = mysqli_query($conn, $getLikeStatus);
@@ -156,57 +173,55 @@
                     $followStatusResult = mysqli_query($conn, $getFollowStatus);
                     $followStatus = mysqli_num_rows($followStatusResult);
 
+                    $uploaderName = $uploader['profileName'];
+                    $uploaderFirstName = strtok($uploaderName, " ");
+
                     if ($likeStatus==1) {
                         echo "
                             <div class='actions'>
-                                <a class='likeOn' href='removeLikeStatus.php?unlikePostId=".$_GET['post']."'>
-                                    <img src='../images/likeOn.png'/>
-                                    <p class='active'> Liked </p>
-                                </a>";
-                                if ($followStatus==1) {
-                                    echo"
-                                        <a class='followOn' href='removeFollowStatus.php?followId=".$uploader['profileId']."'>
-                                            <img src='../images/followOn.png'/>
-                                            <p> Following </p>
-                                        </a>
-                                    </div>
-                                    ";
-                                }
-                                else {
-                                    echo"
-                                        <a class='followOff' href='addFollowStatus.php?followId=".$uploader['profileId']."'>
-                                            <img src='../images/followOff.png'/>
-                                            <p> Follow ".$uploader['profileName']." </p>
-                                        </a>
-                            </div>
-                                ";
-                                }
+                            <a class='likeOn' href='removeLikeStatus.php?unlikePostId=".$_GET['post']."'>
+                            <img src='../images/likeOn.png'/>
+                            <p class='active'> Liked </p>
+                            </a>";
                     }
                     else {
                         echo "
                             <div class='actions'>
-                                <a class='likeOff' href='addLikeStatus.php?likePostId=".$_GET['post']."'>
-                                    <img src='../images/likeOff.png'/>
-                                    <p class='active'> Like Post </p>
-                                </a>";
-                                if ($followStatus==1) {
-                                    echo"
-                                        <a class='followOn' href='removeFollowStatus.php?followId=".$uploader['profileId']."'>
-                                            <img src='../images/followOn.png'/>
-                                            <p> Following </p>
-                                        </a>
-                                    </div>
-                                    ";
-                                }
-                                else {
-                                    echo"
-                                        <a class='followOff' href='addFollowStatus.php?followId=".$uploader['profileId']."'>
-                                            <img src='../images/followOff.png'/>
-                                            <p> Follow ".$uploader['profileName']." </p>
-                                        </a>
-                            </div>
-                                ";
-                                }
+                            <a class='likeOff' href='addLikeStatus.php?likePostId=".$_GET['post']."'>
+                            <img src='../images/likeOff.png'/>
+                            <p class='active'> Like Post </p>
+                            </a>";
+                    }
+                        
+                    if ($followStatus==1) {
+                        echo"
+                            <a class='followOn' href='removeFollowStatus.php?followId=".$uploader['profileId']."'>
+                            <img src='../images/followOn.png'/>
+                            <p> Following </p>
+                            </a>";
+                    }
+                    else {
+                        echo"
+                        <a class='followOff' href='addFollowStatus.php?followId=".$uploader['profileId']."'>
+                        <img src='../images/followOff.png'/>
+                        <p> Follow $uploaderFirstName </p>
+                        </a>";
+                    }
+                        
+                    if ($uploader['reportStatus']==1){
+                        echo "
+                            <a class='followOn' href='removeReport.php?reportId=".$_GET['post']."'>
+                            <img src='../images/report.png'/>
+                            <p> Reported </p>
+                            </a>
+                        </div>";
+                    }
+                    else {
+                        echo "<a class='followOff' href='addReport.php?reportId=".$_GET['post']."'>
+                            <img src='../images/report.png'/>
+                            <p> Report Post </p>
+                            </a>
+                        </div>";
                     }
                 }
                 else {
@@ -217,7 +232,7 @@
                                         <p class='active'> ".$totalLikes." Likes </p>
                                 </a>
                                 <a class='editAction' href='editpost.php?post=".$_GET['post']."'>
-                                    <img src='../images/delete.png'/>
+                                    <img src='../images/edit.png'/>
                                     <p class='followed'> Edit </p>
                                  </a>
                                  <a class='deleteAction' href='viewpost.php?deletePostId=".$_GET['post']."'>
@@ -232,14 +247,17 @@
         <div class="commentSection">
             <h1> Comments </h1>
             <?php
-                if (isset($_SESSION['userId'])){
+                if ($_SESSION['userType']==1){
+                    echo "";
+                }
+                else if (isset($_SESSION['userId'])){
                     $getCommentor = "SELECT * FROM users WHERE profileId=".$_SESSION['userId']."";
                     $commentorResult = mysqli_query($conn, $getCommentor);
                     $commentor = mysqli_fetch_assoc($commentorResult);
                     echo "
                         <div class='commentor'>
                             <form method='POST'>
-                                echo '<a class='ownerComment' href='profile.php'><img src='../profiles/".$commentor['profilePicture']."' alt=''></a>'; 
+                                <a class='ownerComment' href='profile.php'><img src='../profiles/".$commentor['profilePicture']."' alt=''></a>
                                 <input type='text' id='comment' name='comment' placeholder='Type something...' required>
                                 <input type='submit' name='submit' value='Comment'>
                             </form>

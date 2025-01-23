@@ -56,6 +56,7 @@
 
                             if (password_verify($password, $userPassword)){
                                 $_SESSION['userId'] = $user['profileId'];
+                                $_SESSION['userType'] = $user['profileType'];
                                 $_SESSION['loggedIn'] = true;
     
                                 header("location: home.php");

@@ -122,7 +122,7 @@
 
                             if ($fileExtension=='jpg' || $fileExtension=="JPG" || $fileExtension=="png" || $fileExtension=="PNG" ){
                                 if ($imageCategory1!=$imageCategory2 && $imageCategory1!=$imageCategory3 && $imageCategory2 != $imageCategory3) {
-                                    $uploadImg = "INSERT INTO images (imageName, imageDescription, uploadDate, userId) VALUES ('$newImageFile', '$imageDescription', NOW(), '$userId')";
+                                    $uploadImg = "INSERT INTO images (imageName, imageDescription, uploadDate, reportStatus, userId) VALUES ('$newImageFile', '$imageDescription', NOW(), 0, '$userId')";
                                     mysqli_query($conn, $uploadImg);
 
                                     $getUploadedImg = "SELECT MAX(imageId) AS imageId FROM images";

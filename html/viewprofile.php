@@ -56,10 +56,17 @@
             <div class="navigation">
                 <nav class="sections">
                     <?php
-                        if ($loggedIn === true){
+                        if ($loggedIn === true && $_SESSION['userType']==2){
                             echo '  
                                 <a href="uploadimage.php"> Upload </a>
                                 <a href="chats.php"> Chats </a>
+                                <a href="home.php"> Home </a>
+                                <a class="button" href="logout.php"> Logout </a>
+                            ';
+                        }
+                        else if ($loggedIn == true && $_SESSION['userType']==1){
+                            echo '  
+                                <a href="reports.php"> Reports </a>
                                 <a href="home.php"> Home </a>
                                 <a class="button" href="logout.php"> Logout </a>
                             ';
@@ -91,7 +98,10 @@
                         $followStatusResult = mysqli_query($conn, $getFollowStatus);
                         $followStatus = mysqli_num_rows($followStatusResult);
                         
-                        if ($followStatus==1) {
+                        if ($_SESSION['userType']==1){
+                            echo '';
+                        }
+                        else if ($followStatus==1) {
                             echo"
                                 <a class='followOn' href='removeFollowStatus.php?followId=".$_GET['profile']."'>
                                     <p> Following </p>
