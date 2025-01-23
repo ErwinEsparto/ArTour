@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
+    <div class="logoCase">
+        <img class="logoImage" src="../images/Logo/artourlogo.png" onclick="resetZoom()"/>
+    </div>
+
+    <div class="hide">
     <?php
         session_start();
 
@@ -76,5 +81,6 @@
             </form>
         </section>
     </main>
+    </div>
 </body>
 </html>

@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="../css/register.css">
+
 </head>
 <body>
+    <div class="logoCase">
+        <img class="logoImage" src="../images/Logo/artourlogo.png" onclick="resetZoom()"/>
+    </div>
 
+    <div class="hide">
+    
+    <div>
     <?php
         session_start();
 
@@ -73,5 +80,6 @@
             </form>
         </section>
     </main>
+    </div>
 </body>
 </html>
