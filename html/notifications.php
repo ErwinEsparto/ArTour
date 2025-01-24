@@ -38,8 +38,11 @@
             </div>
 
             <div class="search">
-                <img src="../images/searchicon.png" alt="">
-                <input type="search" id="search" name="search" placeholder="Search">
+                <form action="search.php" method="POST">
+                    <img src="../images/searchicon.png" alt="">
+                    <input type="search" id="search" name="search" placeholder="Search">
+                    <button type="submit" style="display:none;">Submit</button>
+                </form>
             </div>
         
             <div class="navigation">

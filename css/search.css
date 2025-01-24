@@ -72,10 +72,6 @@ nav a {
         box-shadow: 0 0 0 1px white;
     }
 }
-nav a.active {
-    box-shadow: 0 0 0 1px white;
-    pointer-events: none;
-}
 nav a.button {
     background-color: #664343;
     border-radius: 25px;
@@ -87,76 +83,47 @@ nav a.button {
         cursor: pointer;
     }
 }
-.notification-sections {
-    display: flex;
-    flex-direction: row;
-    background-color: #424549;
-    width: 100%;
-    justify-content: center;
-}
-.link {
-    display: flex;
-    width: 34%;
-    justify-content: center;
-}
-.notification-sections a {
-    text-decoration: none;
-    color: white;
-    text-align: center;
-    width: 100%;
-    padding: 20px;
-    border-left: 1px solid #282b30;
-    border-right: 1px solid #282b30;
-    transition: .5s;
-    &:hover{
-        background-color: #36393e;
-    }
-}
-.notification-sections a.active {
-    background-color: #36393e;
-    pointer-events: none;
-}
-.all-notifications {
-    display: flex;
-    flex-direction: row;
-}
-.notification-bar{
+.container {
     display: flex;
     flex-direction: column;
-    width: 34%;
-    background-color: #444546;
-    border-left: 1px solid #282b30;
-    border-right: 1px solid #282b30;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    color: white;
 }
-a.like-notification {
+a.people-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    width: 100%;
-    color: white;
-    padding: 10px 0 10px 0;
+    width: 35%;
+    background-color: #424549;
     text-decoration: none;
+    color: white;
+    align-items: center;
+    padding: 10px 10px 10px 10px;
+    margin-bottom: 10px;
+    border-radius: 25px;
     transition: .5s ease;
-    &:hover{
-        background-color: #36393e;
+    &:hover {
+        background-color: #36393d;
     }
 }
-a.like-notification img.notifier-profile {
-    width: 75px;
-    height: 75px;
-    border-radius: 50px;
-    margin-left: 50px;
-}
-.notif-details {
-    margin-left: 50px;
-}
-a.like-notification img.notif-target {
-    width: auto;
+.people-container img {
+    width: 100px;
     height: 100px;
-    border-radius: 25px;
-    margin-left: 50px;
+    border-radius: 50px;
 }
-.no-notif {
-    color: white;
-    text-align: center;
+.people-details {
+    display: flex;
+    flex-direction: column;
+}
+.people-details h2 {
+    margin: 0 0 10px 20px;
+    padding: 0;
+}
+.people-details p {
+    margin: 0 0 0 20px;
+    padding: 0;
+}
+h1.empty {
+    margin-top: 50px;
 }

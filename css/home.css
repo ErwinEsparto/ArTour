@@ -26,19 +26,22 @@ header {
     color: white;
 }
 .search {
+    width: 20%;
+}
+.search form {
     display: flex;
     align-items: center;
     flex-direction: row;
     background: #424549;
     border-radius: 10px;
-    width: 40%;
+    width: 100%;
     padding-left: 15px;
 }
-.search img {
+.search form img {
     width: 15px;
     height: 15px;
 }
-.search input {
+.search form input {
     background: #424549;
     padding: 15px;
     width: 100%;
