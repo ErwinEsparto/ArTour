@@ -38,6 +38,7 @@
             <div class="navigation">
                 <nav class="sections">
                     <a href="uploadimage.php"> Upload </a>
+                    <a href="notifications.php"> Notifications </a>
                     <a href="chats.php"> Chats </a>
                     <a href="profile.php"> Profile </a>
                     <a class="button" href="logout.php"> Logout </a>

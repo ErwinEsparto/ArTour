@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/likedimage.css">
 </head>
 <body>
 
@@ -57,6 +57,7 @@
             <div class="navigation">
                 <nav class="sections">
                     <a href="uploadimage.php"> Upload </a>
+                    <a href="notifications.php"> Notifications </a>
                     <a href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
                     <a class="button" href="logout.php"> Logout </a>

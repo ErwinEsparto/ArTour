@@ -79,6 +79,7 @@
                         if ($loggedIn === true && $_SESSION['userType']==2){
                             echo '  
                                 <a href="uploadimage.php"> Upload </a>
+                                <a href="notifications.php"> Notifications </a>
                                 <a href="chats.php"> Chats </a>
                                 <a href="home.php"> Home </a>
                                 <a class="button" href="logout.php"> Logout </a>
@@ -247,7 +248,7 @@
         <div class="commentSection">
             <h1> Comments </h1>
             <?php
-                if ($_SESSION['userType']==1){
+                if (isset($_SESSION['userType']) && $_SESSION['userType']==1){
                     echo "";
                 }
                 else if (isset($_SESSION['userId'])){
