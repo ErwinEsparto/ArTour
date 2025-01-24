@@ -24,6 +24,7 @@ header {
     position:relative;
     left: 70px;
     color: white;
+    margin: 0;
 }
 .search {
     width: 20%;
@@ -51,6 +52,8 @@ header {
     font-family: "Century Gothic";
     color: white;
     border-radius: 10px;
+    margin: 0;
+    font-size: 0.8em;
 }
 .navigation {
     display: flex;
@@ -181,5 +184,16 @@ form p.error{
         text-decoration: underline;
         color: #795757;
         cursor: pointer;
+    }
+}
+@media screen and (max-width: 1800px /*430px*/) {
+    .column, .passwordColumn, .actions {
+        padding: 0px 30px;
+    }
+    .column h1, .passwordColumn h1, .actions h1 {
+        font-size: 1.3em;
+    }
+    form input, form textarea {
+        margin-bottom: 15px;
     }
 }

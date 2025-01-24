@@ -160,3 +160,20 @@ a.like-notification img.notif-target {
     color: white;
     text-align: center;
 }
+@media screen and (max-width: 1800px /*430px*/) {
+    a.like-notification img.notifier-profile {
+        margin-left: 15px;
+    }
+    .notif-details {
+        margin-left: 15px;
+    }
+    a.like-notification img.notif-target {
+        margin-left: 15px;
+    }
+    .commentWidth {
+        width: 45%;
+    }
+    h2.notifier-name {
+        font-size: 1.2em;
+    }
+}

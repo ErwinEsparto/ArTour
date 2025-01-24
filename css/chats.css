@@ -266,3 +266,11 @@ img.ownerProfile, img.messenger {
 .nothing {
     color: gainsboro;
 }
+@media screen and (max-width: 1800px /*430px*/) {
+    .details {
+        width: 50%;
+    }
+    .details p {
+        margin: 10px 0 0 20px;
+    }
+}

@@ -124,7 +124,7 @@
                             echo"
                             <a class='like-notification' target='_blank' href='viewpost.php?post=".$comment['imageId']."'>
                                 <img class='notifier-profile' src='../profiles/".$notifier['profilePicture']."'/> 
-                                <div class='notif-details'>
+                                <div class='notif-details commentWidth'>
                                     <h2 class='notifier-name'> ".$notifier['profileName']." </h2>
                                     <p class='notif-type'> commented '$checkComment' on your post. </p>
                                 </div>
