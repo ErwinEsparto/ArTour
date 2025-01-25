@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 25, 2025 at 01:49 AM
+-- Generation Time: Jan 25, 2025 at 04:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -199,6 +199,8 @@ CREATE TABLE `users` (
   `profileX` varchar(255) NOT NULL,
   `profilePicture` varchar(255) NOT NULL,
   `dateCreated` date NOT NULL,
+  `activeStatus` int(11) NOT NULL,
+  `reportStatus` int(11) NOT NULL,
   `resetToken` varchar(64) DEFAULT NULL,
   `resetTokenExpire` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -207,12 +209,12 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`profileId`, `profileType`, `profileName`, `profilePassword`, `profileDescription`, `profileAddress`, `profileEmail`, `profileNumber`, `profileFacebook`, `profileInstagram`, `profileX`, `profilePicture`, `dateCreated`, `resetToken`, `resetTokenExpire`) VALUES
-(1, 2, 'Erwin Esparto', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Time is gold when you&#039;re watching...', 'Philippines', 'kingpsycho15@gmail.com', '09123456789', 'Erwin Esparto', 'irwennn', 'Irwen', 'omen_12012024_1733029099.jpg', '2024-11-05', '5ee36d76d16ccc35ad2116ada31ad800cba86087acb44e7717d916f649b23370', '2025-01-03 17:25:52'),
-(2, 2, 'Jaspher Baet', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Nothing lasts forever.', 'USA', 'jasbaet09@gmail.com', '09876543211', 'Jaspher Baet', 'Jaskuno', 'Jaskuno', 'baet.jpg', '2024-11-06', NULL, NULL),
-(4, 2, 'Kenneth Odgien', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', '', 'Canada', 'kennethodgien@gmail.com', '09567123811', '', '', '', 'odgien.png', '2024-11-06', NULL, NULL),
-(5, 2, 'Lilac Goodrich', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', '', 'Japan', 'lilacgoodrich@gmail.com', '09189381289', '', '', '', 'goodrich.jpg', '2024-11-06', NULL, NULL),
-(13, 1, 'ArTour', '$2y$10$4HNmfJkRXk2dbIAehNfrWuvmi02vmx7iPOuIz4cXF/l8mXfYaS8vi', '', 'Philippines', 'artour@gmail.com', '09912039102', 'ArTour', 'ArTour', 'ArTour', 'default.jpg', '2025-01-23', NULL, NULL);
+INSERT INTO `users` (`profileId`, `profileType`, `profileName`, `profilePassword`, `profileDescription`, `profileAddress`, `profileEmail`, `profileNumber`, `profileFacebook`, `profileInstagram`, `profileX`, `profilePicture`, `dateCreated`, `activeStatus`, `reportStatus`, `resetToken`, `resetTokenExpire`) VALUES
+(1, 2, 'Erwin Esparto', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Time is gold when you&#039;re watching...', 'Philippines', 'kingpsycho15@gmail.com', '09123456789', 'Erwin Esparto', 'irwennn', 'Irwen', 'omen_12012024_1733029099.jpg', '2024-11-05', 1, 0, '5ee36d76d16ccc35ad2116ada31ad800cba86087acb44e7717d916f649b23370', '2025-01-03 17:25:52'),
+(2, 2, 'Jaspher Baet', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', 'Nothing lasts forever.', 'USA', 'jasbaet09@gmail.com', '09876543211', 'Jaspher Baet', 'Jaskuno', 'Jaskuno', 'baet.jpg', '2024-11-06', 1, 0, NULL, NULL),
+(4, 2, 'Kenneth Odgien', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', '', 'Canada', 'kennethodgien@gmail.com', '09567123811', '', '', '', 'odgien.png', '2024-11-06', 1, 0, NULL, NULL),
+(5, 2, 'Lilac Goodrich', '$2y$10$vfx5vdOd68Dq9A/1rR.rue7qTr16tmbRZC1G.amnPJsehAl01hcqO', '', 'Japan', 'lilacgoodrich@gmail.com', '09189381289', '', '', '', 'goodrich.jpg', '2024-11-06', 0, 0, NULL, NULL),
+(13, 1, 'ArTour', '$2y$10$4HNmfJkRXk2dbIAehNfrWuvmi02vmx7iPOuIz4cXF/l8mXfYaS8vi', '', 'Philippines', 'artour@gmail.com', '09912039102', 'ArTour', 'ArTour', 'ArTour', 'default.jpg', '2025-01-23', 1, 0, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -269,43 +271,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `chats`
 --
 ALTER TABLE `chats`
-  MODIFY `chatId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `chatId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `commentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `commentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `follow`
 --
 ALTER TABLE `follow`
-  MODIFY `followId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `followId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `likeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `likeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `profileId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `profileId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
