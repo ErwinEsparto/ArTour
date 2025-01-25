@@ -95,6 +95,7 @@
                         else if ($loggedIn == true && $_SESSION['userType']==1){
                             echo '  
                                 <a href="reports.php"> Reports </a>
+                                <a href="userManage.php"> Accounts </a>
                                 <a href="home.php"> Home </a>
                                 <a class="button" href="logout.php"> Logout </a>
                             ';
@@ -323,7 +324,7 @@
                                     <div class='commentDetails'>
                                         <p class='commentDate'> $commentFormatDate </p>
                                     </div>";
-                                    if($comment['profileId']==$_SESSION['userId'] || $uploader['profileId']==$_SESSION['userId']){
+                                    if($comment['profileId']==$_SESSION['userId'] || $uploader['profileId']==$_SESSION['userId'] || $_SESSION['userType']==1){
                                         echo "<a class='deleteComment' href='javascript:void()' onClick='delAlert(".$comment['commentId'].", ".$_GET['post'].")'><img src='../images/deleteComment.png'/></a>";
                                     }
                                 echo "</div>

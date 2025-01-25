@@ -52,6 +52,7 @@
                     else if ($loggedIn == true && $_SESSION['userType']==1){
                         echo '  
                             <a href="reports.php"> Reports </a>
+                            <a href="userManage.php"> Accounts </a>
                             <a href="home.php"> Home </a>
                             <a class="button" href="logout.php"> Logout </a>
                         ';

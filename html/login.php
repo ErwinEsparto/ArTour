@@ -60,12 +60,17 @@
                             $userPassword = $user['profilePassword'];
 
                             if (password_verify($password, $userPassword)){
-                                $_SESSION['userId'] = $user['profileId'];
-                                $_SESSION['userType'] = $user['profileType'];
-                                $_SESSION['loggedIn'] = true;
-    
-                                header("location: home.php");
-                                exit();
+                                if ($user['activeStatus']==1){
+                                    $_SESSION['userId'] = $user['profileId'];
+                                    $_SESSION['userType'] = $user['profileType'];
+                                    $_SESSION['loggedIn'] = true;
+        
+                                    header("location: home.php");
+                                    exit();
+                                }
+                                else {
+                                    echo "<p class='result'> You have been banned from using ArTour. <br> Contact admin to reactivate your account. </p>";
+                                }
                             }
                             else {
                                 echo "<p class='result'> Invalid Password. </p>";

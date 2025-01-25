@@ -64,8 +64,8 @@
                         $row = mysqli_num_rows($checkExist);
 
                         if ($row == 0) {
-                            $registerUser = "INSERT INTO users (profileType, profileName, profilePassword, profileAddress, profileEmail, profileNumber, profileFacebook, profileInstagram, profileX, profilePicture, dateCreated) 
-                            VALUES (2, '$name', '$encryptPassword', '$address', '$email', '$number', 'Not Available', 'Not Available', 'Not Available', 'default.jpg', curdate())";
+                            $registerUser = "INSERT INTO users (profileType, profileName, profilePassword, profileAddress, profileEmail, profileNumber, profileFacebook, profileInstagram, profileX, profilePicture, dateCreated, activeStatus) 
+                            VALUES (2, '$name', '$encryptPassword', '$address', '$email', '$number', 'Not Available', 'Not Available', 'Not Available', 'default.jpg', curdate(), 1)";
                             $addUser = mysqli_query($conn, $registerUser);
                             echo "<p class='success'> Successfully Registered. </p>";
                             header("refresh: 1.5; url = login.php");

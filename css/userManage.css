@@ -111,13 +111,13 @@ th {
     background-color: #664343; 
     color: white;
 }
-.report a {
+.user a {
     text-decoration: none;
     color: white;
 }
-.report a.enable:hover {
+.user a.enable:hover {
     color: green;
 }
-.report a.disable:hover {
+.user a.disable:hover {
     color: red;
 }
