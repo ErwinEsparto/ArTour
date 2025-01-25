@@ -28,6 +28,19 @@
         WHERE followStatus=1 AND followerId='$_GET[profile]'";
         $followingResult = mysqli_query($conn, $getFollowing);
         $following = mysqli_num_rows($followingResult);
+
+        if(isset($_GET['reportId'])){
+            $reportUser = "UPDATE users SET reportStatus=1 WHERE profileId='$_GET[reportId]'";
+            $reportResult = mysqli_query ($conn, $reportUser);
+            header("Location: viewprofile.php?profile=" . $_GET['reportId']);
+            die();
+        }
+        if(isset($_GET['unReportId'])){
+            $unReportUser = "UPDATE users SET reportStatus=0 WHERE profileId='$_GET[reportId]'";
+            $unReportResult = mysqli_query ($conn, $unReportUser);
+            header("Location: viewprofile.php?profile=" . $_GET['reportId']);
+            die();
+        }
     ?>
 
 <!DOCTYPE html>
@@ -108,6 +121,7 @@
                         }
                         else if ($followStatus==1) {
                             echo"
+                                <div class='actions'>
                                 <a class='followOn' href='removeFollowStatus.php?followId=".$_GET['profile']."'>
                                     <p> Following </p>
                                 </a>
@@ -115,11 +129,30 @@
                         }
                         else {
                             echo"
+                                <div class='actions'>
                                 <a class='followOff' href='addFollowStatus.php?followId=".$_GET['profile']."'>
                                     <p> Follow </p>
                                 </a>";
                         }
 
+                        if ($_SESSION['userType']==1){
+                            echo '';
+                        }
+                        else if ($account['reportStatus']==0) {
+                            echo"
+                                <a class='followOff' href='viewprofile.php?profile=".$_GET['profile']."&&reportId=".$_GET['profile']."'>
+                                    <p> Report User </p>
+                                </a>
+                                </div>
+                            ";
+                        }
+                        else {
+                            echo"
+                                <a class='followOn' href='viewprofile.php?profile=".$_GET['profile']."&&unReportId=".$_GET['profile']."'>
+                                    <p> Reported </p>
+                                </a>
+                                </div>";
+                        }
                     }
                     else{
                         echo "";

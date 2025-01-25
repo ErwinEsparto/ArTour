@@ -21,6 +21,13 @@
 
         $getFollowing = "SELECT * FROM follow WHERE followerId=$userId";
         $followingResult = mysqli_query($conn, $getFollowing);
+
+        if(isset($_GET['deleteChatId'])){
+            $query = "DELETE FROM chats WHERE chatId='$_GET[deleteChatId]'";
+            $deleteResult = mysqli_query ($conn, $query);
+            header("Location: chats.php?message=".$_GET['message']);
+            die();
+        }
     ?>
 
     <header>
@@ -129,6 +136,7 @@
                             if ($messagesDetails['messengerId']==$userId) {
                                 echo "
                                     <div class='rightSide'>
+                                        <a class='deleteComment' href='javascript:void()' onClick='delAlert(".$messagesDetails['chatId'].", ".$_GET['message'].")'><img src='../images/deleteComment.png'/></a>
                                         <p> ".$messagesDetails['message']." </p>
                                     </div>
                                 ";
@@ -170,5 +178,13 @@
             </div>
         </div>
     </main>
+    <script>
+        function delAlert(id, messageId){
+            sts = confirm ("Are you sure you want to delete this message?");
+            if (sts){
+                document.location.href=`chats.php?deleteChatId=${id}&&message=${messageId}`;
+            }
+        }
+    </script>
 </body>
 </html>

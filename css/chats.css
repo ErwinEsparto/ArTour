@@ -266,6 +266,17 @@ img.ownerProfile, img.messenger {
 .nothing {
     color: gainsboro;
 }
+a.deleteComment img {
+    align-self: center;
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    border-radius: 10px;
+    padding: 5px;
+    &:hover {
+        background-color: maroon;
+    }
+}
 @media screen and (max-width: 1800px /*430px*/) {
     .details {
         width: 50%;

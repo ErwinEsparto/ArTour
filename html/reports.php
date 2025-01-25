@@ -20,9 +20,13 @@
         $selectedCategory = (empty($_GET['category'])) ? 'All' : '';
 
         $getReports = "SELECT * FROM images INNER JOIN users 
-        ON images.userId=users.profileId WHERE reportStatus=1";
+        ON images.userId=users.profileId WHERE images.reportStatus=1";
         $reportResult = mysqli_query($conn, $getReports);
         $rownum = mysqli_num_rows($reportResult);
+
+        $getUserReports = "SELECT * FROM users WHERE reportStatus=1";
+        $useReportResult = mysqli_query($conn, $getUserReports);
+        $userrownum = mysqli_num_rows($useReportResult);
 
         if(isset($_GET['deleteID'])){
             $findImage = "SELECT * FROM images WHERE imageId='$_GET[deleteID]'";
@@ -51,6 +55,12 @@
                 header("location:reports.php");
                 die();
             }
+        }
+        if(isset($_GET['unreportId'])){
+            $unreportUser = "UPDATE users SET reportStatus=0 WHERE profileId='$_GET[unreportId]'";
+            $unreportResult = mysqli_query ($conn, $unreportUser);
+            header("location:reports.php");
+            die();
         }
     ?>
 
@@ -100,7 +110,40 @@
         </div>
     </header>
     <main>
-    <div class="table">
+        <div class="table">
+            <h1> Reported Users </h1>
+            <table class="reports">
+                <thead>
+                    <tr class="columns">
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Link</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                    if($userrownum>0){
+                        while ($userReport = mysqli_fetch_assoc($useReportResult)){
+                            echo "
+                            <tr class='report'>
+                                <td>".$userReport['profileId']." </td>
+                                <td>".$userReport['profileName']."</td>
+                                <td>".$userReport['profileAddress']." </td>
+                                <td>".$userReport['profileEmail']." </td>
+                                <td><a class='enable' target='_blank' href='viewprofile.php?profile=".$userReport['profileId']."'>View</a></td>
+                                <td> <a class='disable' href='javascript:void()' onClick='unReAlert(".$userReport['profileId'].")'> Unreport </a>
+                            </tr>";
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="table">
+            <h1> Reported Posts </h1>
             <table class="reports">
                 <thead>
                     <tr class="columns">
@@ -145,6 +188,12 @@
             sts = confirm ("Are you sure you want to delete this post?");
             if (sts){
                 document.location.href=`reports.php?deleteID=${id}`;
+            }
+        }
+        function unReAlert(id){
+            sts = confirm ("Are you sure you want to unreport this user?");
+            if (sts){
+                document.location.href=`reports.php?unreportId=${id}`;
             }
         }
 </script>
