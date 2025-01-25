@@ -290,6 +290,15 @@ a.commentorName {
 p.commentDate {
     margin: 0 0 0 10px;
 }
+a.deleteComment img {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    padding: 5px;
+    &:hover {
+        background-color: maroon;
+    }
+}
 .container {
     display: flex;
     flex-direction: row;

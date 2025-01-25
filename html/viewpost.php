@@ -24,7 +24,7 @@
     $totalLikes = mysqli_num_rows($totalLikesResult);
 
     if(isset($_GET['deletePostId'])){
-        $findImage = "SELECT * FROM images WHERE imageId='$_GET[deletePostId]' AND userId='".$_SESSION['userId']."'";
+        $findImage = "SELECT * FROM images WHERE imageId='$_GET[deletePostId]'";
         $findResult = mysqli_query($conn, $findImage);
         $image = mysqli_fetch_assoc($findResult);
 
@@ -33,7 +33,7 @@
         if(file_exists($imageLocation)){
             unlink($imageLocation);
             
-            $query = "DELETE FROM images WHERE imageId='$_GET[deletePostId]' AND userId='".$_SESSION['userId']."'";
+            $query = "DELETE FROM images WHERE imageId='$_GET[deletePostId]'";
             $delete = mysqli_query ($conn, $query);
 
             $deleteCategory = "DELETE FROM categories WHERE imageId='$_GET[deletePostId]'";
@@ -42,14 +42,18 @@
             $deleteLike = "DELETE FROM likes WHERE imageId='$_GET[deletePostId]'";
             $deleteL = mysqli_query ($conn, $deleteLike);
 
-            header("location:profile.php");
+            header("location:home.php");
             die();
         }
         else {
             echo "<script type='text/javascript'>alert('Image Not Found!');</script>";
-            header("location:profile.php");
+            header("location:home.php");
             die();
         }
+    }
+    if(isset($_GET['deleteCommentId'])){
+        $query = "DELETE FROM comments WHERE commentId='$_GET[deleteCommentId]'";
+        $deleteResult = mysqli_query ($conn, $query);
     }
 ?>  
 
@@ -160,7 +164,7 @@
                 else if ($_SESSION['userType']==1) {
                     echo "
                         <div class='actions ownerActions'>
-                            <a class='deleteAction' href='viewpost.php?deletePostId=".$_GET['post']."'>
+                            <a class='deleteAction' href='javascript:void()' onClick='delAlert2(".$_GET['post'].")'>
                                 <img src='../images/delete.png'/>
                                 <p class='followed'> Delete </p>
                             </a>
@@ -239,7 +243,7 @@
                                     <img src='../images/edit.png'/>
                                     <p class='followed'> Edit </p>
                                  </a>
-                                 <a class='deleteAction' href='viewpost.php?deletePostId=".$_GET['post']."'>
+                                 <a class='deleteAction' href='javascript:void()' onClick='delAlert2(".$_GET['post'].")'>
                                     <img src='../images/delete.png'/>
                                     <p class='followed'> Delete </p>
                                  </a>
@@ -318,9 +322,11 @@
                                     </div>  
                                     <div class='commentDetails'>
                                         <p class='commentDate'> $commentFormatDate </p>
-                                    </div>
-                                    
-                                </div>
+                                    </div>";
+                                    if($comment['profileId']==$_SESSION['userId'] || $uploader['profileId']==$_SESSION['userId']){
+                                        echo "<a class='deleteComment' href='javascript:void()' onClick='delAlert(".$comment['commentId'].", ".$_GET['post'].")'><img src='../images/deleteComment.png'/></a>";
+                                    }
+                                echo "</div>
                             ";
 
                         }
@@ -379,5 +385,19 @@
         </div>
         </div>
     </main>
+    <script>
+        function delAlert(id, postId){
+            sts = confirm ("Are you sure you want to delete this comment?");
+            if (sts){
+                document.location.href=`viewpost.php?deleteCommentId=${id}&&post=${postId}`;
+            }
+        }
+        function delAlert2(postId){
+            sts = confirm ("Are you sure you want to delete this post?");
+            if (sts){
+                document.location.href=`viewpost.php?deletePostId=${postId}&&post=${postId}`;
+            }
+        }
+    </script>
 </body>
 </html>

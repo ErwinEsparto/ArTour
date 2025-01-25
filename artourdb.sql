@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 23, 2025 at 10:44 AM
+-- Generation Time: Jan 25, 2025 at 01:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -52,10 +52,7 @@ INSERT INTO `categories` (`categoryId`, `imageId`, `category`) VALUES
 (12, 47, 'Digital'),
 (13, 49, 'Animal'),
 (14, 49, 'Photography'),
-(15, 53, 'Game'),
-(21, 57, 'Game'),
-(22, 57, 'Digital'),
-(23, 57, 'None');
+(15, 53, 'Game');
 
 -- --------------------------------------------------------
 
@@ -99,8 +96,7 @@ CREATE TABLE `comments` (
 
 INSERT INTO `comments` (`commentId`, `comment`, `commentorId`, `postId`, `dateCommented`) VALUES
 (1, 'Wow', 2, 49, '2025-01-18 17:25:52'),
-(2, 'Amazing', 1, 49, '2025-01-19 17:25:52'),
-(3, 'ASD', 1, 43, '2025-01-18 00:00:00');
+(2, 'Amazing', 1, 49, '2025-01-19 17:25:52');
 
 -- --------------------------------------------------------
 
@@ -156,8 +152,7 @@ INSERT INTO `images` (`imageId`, `imageName`, `imageDescription`, `uploadDate`, 
 (34, 'sculpture.jpg', '💪', '2024-11-07 23:51:20', 0, 1),
 (43, 'drawing.jpg', 'Wow', '2024-11-08 22:43:03', 0, 2),
 (47, 'game.jpg', '', '2024-11-08 22:52:35', 0, 1),
-(49, 'dog.jpg', '&lt;3', '2024-11-08 23:22:55', 0, 1),
-(57, 'malenia_11292024_1732881723_01232025_1737625318.jpg', 'Elden Ring', '2025-01-23 17:41:58', 0, 1);
+(49, 'dog.jpg', '&lt;3', '2024-11-08 23:22:55', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -180,7 +175,9 @@ INSERT INTO `likes` (`likeId`, `imageId`, `likeStatus`, `profileId`) VALUES
 (13, 31, 1, 1),
 (14, 26, 1, 1),
 (15, 28, 1, 1),
-(22, 43, 1, 1);
+(22, 43, 1, 1),
+(25, 49, 1, 5),
+(26, 47, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -272,7 +269,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `chats`
@@ -284,7 +281,7 @@ ALTER TABLE `chats`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `commentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `commentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `follow`
@@ -296,13 +293,13 @@ ALTER TABLE `follow`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `likeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `likeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `users`
