@@ -17,16 +17,33 @@
         $DBName = "artourdb";
         $conn = mysqli_connect($DBHost, $DBUser, $DBPass, $DBName);
         $loggedIn = $_SESSION['loggedIn'] ?? false;
+
+        if($_SESSION['userType']!=2 || !isset($_SESSION['userId'])){
+            header("location: home.php");
+        }
+
         $userId=$_SESSION['userId'];
 
-        $getFollowing = "SELECT * FROM follow WHERE followerId=$userId";
+        $getFollowing = "SELECT * FROM follow WHERE followerId=$userId ORDER BY lastMessageDate DESC";
         $followingResult = mysqli_query($conn, $getFollowing);
-
         if(isset($_GET['deleteChatId'])){
             $query = "DELETE FROM chats WHERE chatId='$_GET[deleteChatId]'";
             $deleteResult = mysqli_query ($conn, $query);
             header("Location: chats.php?message=".$_GET['message']);
             die();
+        }
+        if(isset($_GET['message'])){
+            $existChat = "SELECT * FROM users WHERE profileId='$_GET[message]'";
+            $existChatResult = mysqli_query($conn, $existChat);
+            $isChatExist = mysqli_num_rows($existChatResult);
+            if ($isChatExist>0){
+                $readChat = "UPDATE chats SET readStatus=1 WHERE messengerId='".$_GET['message']."' AND receiverId=$userId";
+                $chatResult = mysqli_query($conn, $readChat);
+            }
+            else {
+                header("location:chats.php");
+                die();
+            }
         }
     ?>
 
@@ -50,7 +67,7 @@
                     <a href="notifications.php"> Notifications </a>
                     <a class="active" href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
-                    <a class="button" href="logout.php"> Logout </a>
+                    <a class="button" href="#divOne"> Logout </a>
                 </nav>
             </div>
         </div>
@@ -76,14 +93,24 @@
                             $chatDate = strtotime($chatDetails['messageDate']);
                             $chatFormatDate = date("M j, Y", $chatDate)."<br>".date("g:i A", $chatDate);
                             $message = $chatDetails['message'];
-                            $checkMessage = (strlen($message) > 30) ? substr($message, 0, 30) . "..." : $message;
+                            $checkMessage = (strlen($message) > 20) ? substr($message, 0, 20) . "..." : $message;
                             echo "
                             <a class='chathead' href='chats.php?message=".$followedUser['followedId']."'><div class='person'>
                                 <img class='followingProfile' src='../profiles/".$followingUser['profilePicture']."'/>
                                 <div class='details'>
-                                    <h2> ".$followingUser['profileName']."</h2>
-                                    <p class='message'> ".htmlspecialchars($checkMessage)." </p>
-                                </div>
+                                    <h2> ".$followingUser['profileName']."</h2>";
+                                    if ($chatDetails['messengerId']==$_SESSION['userId']){
+                                        echo "<p class='message'> You: ".htmlspecialchars($checkMessage)." </p>";
+                                    }
+                                    else {
+                                        if ($chatDetails['readStatus']!=1){
+                                            echo "<b><p class='message' style='color: white;'> ".htmlspecialchars($checkMessage)." </p></b>";
+                                        }
+                                        else {
+                                            echo "<p class='message'> ".htmlspecialchars($checkMessage)." </p>";
+                                        }
+                                    }
+                                echo "</div>
                                 <p class='date'> $chatFormatDate</p>
                             </div></a>
                             ";
@@ -127,58 +154,143 @@
             ?>
             <div class="sendMessage">
                 <?php
-                    $getMessages = "SELECT * FROM chats WHERE (receiverId=$userId OR receiverId=".$_GET['message'].") AND (messengerId=$userId OR messengerId=".$_GET['message'].")";
-                    $messagesResult = mysqli_query($conn, $getMessages);
-                    $messagesRow = mysqli_num_rows($messagesResult);
+                    if(!empty($_GET['message'])){
+                        $getMessages = "SELECT * FROM chats WHERE (receiverId=$userId OR receiverId=".$_GET['message'].") AND (messengerId=$userId OR messengerId=".$_GET['message'].")";
+                        $messagesResult = mysqli_query($conn, $getMessages);
+                        $messagesRow = mysqli_num_rows($messagesResult);
 
-                    if ($messagesRow>0){
-                        while ($messagesDetails = mysqli_fetch_assoc($messagesResult)){
-                            if ($messagesDetails['messengerId']==$userId) {
-                                echo "
-                                    <div class='rightSide'>
-                                        <a class='deleteComment' href='javascript:void()' onClick='delAlert(".$messagesDetails['chatId'].", ".$_GET['message'].")'><img src='../images/deleteComment.png'/></a>
-                                        <p> ".$messagesDetails['message']." </p>
-                                    </div>
-                                ";
+                        if ($messagesRow>0){
+                            while ($messagesDetails = mysqli_fetch_assoc($messagesResult)){
+                                if ($messagesDetails['messengerId']==$userId) {
+                                    echo "
+                                        <div class='rightSide'>
+                                            <a class='deleteComment' href='javascript:void()' onClick='delAlert(".$messagesDetails['chatId'].", ".$_GET['message'].")'>...</a>
+                                            <p class='imageMessage'> ".$messagesDetails['message']." ";
+                                            if ($messagesDetails['imageName']!=NULL){
+                                                echo "<img class='messageImage' src='../chats/".$messagesDetails['imageName']."'/> </p>";
+                                            }
+                                            else {
+                                                echo "";
+                                            }
+                                        echo"</div>
+                                    ";
+                                }
+                                else {
+                                    echo "
+                                        <div class='leftSide'>
+                                            <img class='messenger' src='../profiles/".$followedUserDetails['profilePicture']."'/>
+                                            <p class='imageMessage'> ".$messagesDetails['message']." ";
+                                            if ($messagesDetails['imageName']!=NULL){
+                                                echo "<img class='messageImage' src='../chats/".$messagesDetails['imageName']."'/> </p>";
+                                            }
+                                            else {
+                                                echo "";
+                                            }
+                                        echo "</div>
+                                    ";
+                                }
                             }
-                            else {
-                                echo "
-                                    <div class='leftSide'>
-                                        <img class='messenger' src='../profiles/".$followedUserDetails['profilePicture']."'/>
-                                        <p> ".$messagesDetails['message']." </p>
-                                    </div>
-                                ";
-                            }
+                        }
+                        else {
+                            echo "<div class='none'> <p> No Messages Yet. </p> </div>";
                         }
                     }
                     else {
-                        echo "<div class='none'> <p> No Messages Yet. </p> </div>";
+                        echo"";
                     }
                 ?>
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <?php 
+                    if(!empty($_GET['message'])){
                         $getUser = "SELECT * FROM users WHERE profileId=$userId";
                         $userResult = mysqli_query($conn, $getUser);
                         $userDetails = mysqli_fetch_assoc($userResult);
-                        echo "<img class='ownerProfile' src='../profiles/".$userDetails['profilePicture']."'/>";
-                    ?>
-                    <input type="text" id="message" name="message" placeholder="Type something..." required>
-                    <input type="submit" name="submit" value="Send">
-                    <?php 
+                        echo "
+                            <div id='imageSection' class='column'>
+                                <img id='uploadedimage' alt='Selected Image'>
+                                <p class='preview'> Preview </p>
+                            </div>
+                            <div class='messageSection'>
+                                <img class='ownerProfile' src='../profiles/".$userDetails['profilePicture']."'/>
+                                <input type='text' id='message' name='message' maxlength='50' placeholder='Type something...' required>
+                                <input type='file' id='uploadimage' name='image' accept='image/*'>
+                                <input type='submit' name='submit' value='Send'>
+                            </div>
+                        ";
                         if(isset($_POST["submit"])){
-                            $newMessage = $_POST["message"];
-                            $addMessage = "INSERT INTO chats (message, messengerId, receiverId, messageDate) 
-                            VALUES ('$newMessage', '$userId', '".$_GET['message']."', now())";
-                            $addNewMessage = mysqli_query($conn, $addMessage);
-                            header("Location: chats.php?message=". urlencode($_GET['message']));
-                            exit();
-                        }
+                            $newMessage = htmlspecialchars(trim($_POST['message']));
+
+                            $imageFile = $_FILES["image"]["name"];
+                            $date = date('mdY');
+                            $fileExtension = pathinfo($imageFile, PATHINFO_EXTENSION);
+                            $newImageFile = pathinfo($imageFile, PATHINFO_FILENAME) . "_" . $date . "_" .time(). "." . $fileExtension;
+                            $imageTempName = $_FILES["image"]["tmp_name"];
+                            $folder = "../chats/";
+
+                            if(!empty($imageFile)){
+                                if ($fileExtension=='jpg' || $fileExtension=="JPG" || $fileExtension=="png" || $fileExtension=="PNG"){
+                                    $addMessage = "INSERT INTO chats (message, imageName, messengerId, receiverId, messageDate) 
+                                    VALUES ('$newMessage', '$newImageFile', '$userId', '".$_GET['message']."', now())";
+                                    $addNewMessage = mysqli_query($conn, $addMessage);
+                                    $imageFilePath = $folder . $newImageFile;
+                                    if (move_uploaded_file($imageTempName, $imageFilePath)) {
+                                        header("Location: chats.php?message=". urlencode($_GET['message']));
+                                        exit();
+                                    } else {
+                                        echo "<p class='error'> Failed to Upload </p>";
+                                    }
+                                }
+                                else {
+                                    echo "<p class='error'> Only JPG/PNG images allowed. </p>";
+                               }
+                            }
+                            else {
+                                $addMessage = "INSERT INTO chats (message, imageName, messengerId, receiverId, messageDate) 
+                                VALUES ('$newMessage', NULL, '$userId', '".$_GET['message']."', now())";
+                                $addNewMessage = mysqli_query($conn, $addMessage);
+                            }
+                            
+                            $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+                            VALUES ($userId, 4, '".$_GET['message']."', now(), 0)";
+                            $notif = mysqli_query ($conn, $notifQuery);
+
+                            $messageQuery = "UPDATE follow SET lastMessageDate=now() WHERE (followerId=$userId OR followedId=$userId) AND (followerId='".$_GET['message']."' OR followedId='".$_GET['message']."')";
+                            $messageOutput = mysqli_query ($conn, $messageQuery);
+                            }
+                    }
+                    else{
+                        echo "";
+                    }
                     ?>
                 </form>
             </div>
         </div>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <script>
+        const uploadimage = document.getElementById('uploadimage');
+        const uploadedimage = document.getElementById('uploadedimage');
+        const imageSection = document.getElementById('imageSection');
+        uploadimage.onchange = evt => {
+            const [file] = uploadimage.files;
+            if (file) {
+                uploadedimage.src = URL.createObjectURL(file);
+                uploadedimage.style.display = 'block';
+                imageSection.style.display = 'flex';
+            }
+        };
         function delAlert(id, messageId){
             sts = confirm ("Are you sure you want to delete this message?");
             if (sts){

@@ -23,33 +23,30 @@
     $totalLikesResult = mysqli_query($conn, $getTotalLikes);
     $totalLikes = mysqli_num_rows($totalLikesResult);
 
-    if(isset($_GET['deletePostId'])){
-        $findImage = "SELECT * FROM images WHERE imageId='$_GET[deletePostId]'";
-        $findResult = mysqli_query($conn, $findImage);
-        $image = mysqli_fetch_assoc($findResult);
+    if(isset($_GET['post'])){
+        $existImage = "SELECT * FROM images WHERE imageId='$_GET[post]' AND deleteStatus!=1";
+        $existImageResult = mysqli_query($conn, $existImage);
+        $isImageExist = mysqli_num_rows($existImageResult);
+        if ($isImageExist>0){
 
-        $imageLocation = $_DIR_.'../posts/'.$image['imageName'];
-
-        if(file_exists($imageLocation)){
-            unlink($imageLocation);
-            
-            $query = "DELETE FROM images WHERE imageId='$_GET[deletePostId]'";
-            $delete = mysqli_query ($conn, $query);
-
-            $deleteCategory = "DELETE FROM categories WHERE imageId='$_GET[deletePostId]'";
-            $deleteC = mysqli_query ($conn, $deleteCategory);
-
-            $deleteLike = "DELETE FROM likes WHERE imageId='$_GET[deletePostId]'";
-            $deleteL = mysqli_query ($conn, $deleteLike);
-
-            header("location:home.php");
-            die();
         }
         else {
-            echo "<script type='text/javascript'>alert('Image Not Found!');</script>";
             header("location:home.php");
             die();
         }
+    }
+    if(isset($_GET['notifId'])){
+        $updateNotif = "UPDATE notifications SET readStatus=1 WHERE notificationId='".$_GET['notifId']."'";
+        $notifUpdate = mysqli_query($conn, $updateNotif);
+    }
+    if(isset($_GET['deletePostId'])){
+        $query = "UPDATE images SET deleteStatus=1 WHERE imageId='$_GET[deletePostId]'";
+        $delete = mysqli_query ($conn, $query);
+        $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+        VALUES ('".$_SESSION['userId']."', 13, '".$_SESSION['userId']."', now(), 1)";
+        $notif = mysqli_query ($conn, $notifQuery);
+        header("location:home.php");
+        die();
     }
     if(isset($_GET['deleteCommentId'])){
         $query = "DELETE FROM comments WHERE commentId='$_GET[deleteCommentId]'";
@@ -216,17 +213,22 @@
                         <p> Follow $uploaderFirstName </p>
                         </a>";
                     }
+
+                    $checkReport = "SELECT * FROM reports WHERE reporterId='".$_SESSION['userId']."' AND reportedId='".$uploader['userId']."' AND reportType=1 AND imageId='".$_GET['post']."'";
+                    $checkReportResult = mysqli_query($conn, $checkReport);
+                    $checkReportRow = mysqli_num_rows($checkReportResult);
+                    $report = mysqli_fetch_assoc($checkReportResult);
                         
-                    if ($uploader['reportStatus']==1){
+                    if ($checkReportRow!=0){
                         echo "
-                            <a class='followOn' href='removeReport.php?reportId=".$_GET['post']."'>
+                            <a class='followOn' href='removeReport.php?reportId=".$report['reportId']."'>
                             <img src='../images/report.png'/>
                             <p> Reported </p>
                             </a>
                         </div>";
                     }
                     else {
-                        echo "<a class='followOff' href='addReport.php?reportId=".$_GET['post']."'>
+                        echo "<a class='followOff' href='#divOne'>
                             <img src='../images/report.png'/>
                             <p> Report Post </p>
                             </a>
@@ -277,6 +279,15 @@
 
                         $addNewComment = "INSERT INTO comments (comment, commentorId, postId, dateCommented) VALUES ('$newComment', ".$_SESSION['userId'].", '$_GET[post]', now())";
                         $addComment = mysqli_query($conn, $addNewComment);
+
+                        $postComment = "SELECT userId FROM images WHERE imageId='".$_GET['post']."'";
+                        $postCommentResult = mysqli_query ($conn, $postComment);
+                        $posterAccount = mysqli_fetch_assoc($postCommentResult);
+                        $notified = $posterAccount['userId'];
+
+                        $notifQuery = "INSERT INTO notifications (notifierId, notifType, imageId, notifiedId, notifyDate, readStatus)
+                            VALUES ('".$_SESSION['userId']."', 2, '".$_GET['post']."', $notified, now(), 0)";
+                            $notif = mysqli_query ($conn, $notifQuery);
                     }
                 }
                 else {
@@ -324,30 +335,43 @@
                                     <div class='commentDetails'>
                                         <p class='commentDate'> $commentFormatDate </p>
                                     </div>";
-                                    if($comment['profileId']==$_SESSION['userId'] || $uploader['profileId']==$_SESSION['userId'] || $_SESSION['userType']==1){
+                                    if (!isset($_SESSION['userId'])){
+                                        echo "";
+                                    }
+                                    else if($comment['profileId']==$_SESSION['userId'] || $uploader['profileId']==$_SESSION['userId'] || $_SESSION['userType']==1){
                                         echo "<a class='deleteComment' href='javascript:void()' onClick='delAlert(".$comment['commentId'].", ".$_GET['post'].")'><img src='../images/deleteComment.png'/></a>";
+                                    }
+                                    else {
+                                        echo "";
                                     }
                                 echo "</div>
                             ";
 
                         }
                     }
+                    else {
+                        echo "<p style='color: white; text-align: center;'> No Comments Yet. </p>";
+                    }
                 ?>
             </div>
         </div>
         <div class="otherPosts">
-            <h1> <?php echo $uploader['profileName']; ?>'s Other Uploads</h1>
-            <div class="container">
             <?php
                 $getImages = "SELECT * FROM images 
                 INNER JOIN users 
                 ON images.userId=users.profileId
                 WHERE userId='".$uploader['profileId']."'
-                AND imageId!='$_GET[post]' ORDER BY uploadDate DESC";
+                AND imageId!='$_GET[post]' 
+                AND deleteStatus!=1 
+                ORDER BY uploadDate DESC";
                 $imageResult = mysqli_query($conn, $getImages);
                 $images = mysqli_num_rows($imageResult);
 
                 if($images>0){
+                    echo "
+                        <h1> ".$uploader['profileName']."'s Other Uploads</h1>
+                        <div class='container'>
+                    ";
                     while ($image = mysqli_fetch_assoc($imageResult)){
                         $getCategories = "SELECT * FROM categories WHERE imageId='".$image['imageId']."'";
                         $categoriesResult = mysqli_query($conn, $getCategories);
@@ -384,6 +408,31 @@
                 }
             ?>
         </div>
+        </div>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Report Details</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Reason</label> 
+                            <textarea name="reason" maxlength='30' required placeholder="Reason for reporting"></textarea>
+                            <input type="submit" name="report" value="Report">
+                            <?php
+                                if(isset($_POST["report"])){
+                                    $reason = htmlspecialchars(trim($_POST['reason']));
+                                    if(!empty($reason)){
+                                        $recordReport = "INSERT INTO reports (reportedId, reportReason, imageId, reportType, reporterId, reportDate) 
+                                        VALUES ('".$uploader['userId']."', '$reason', '".$_GET['post']."', 1, '".$_SESSION['userId']."', now())";
+                                        $reportQuery = mysqli_query($conn, $recordReport);
+                                        echo "<p class='success'> Post reported successfully. </p>";
+                                    }
+                                }
+                            ?>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
     <script>

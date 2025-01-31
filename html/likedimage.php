@@ -24,7 +24,7 @@
         $getImages = "SELECT * FROM likes 
         INNER JOIN images
         ON images.imageId=likes.imageId
-        WHERE profileId='".$_SESSION['userId']."' AND likeStatus=1
+        WHERE profileId='".$_SESSION['userId']."' AND likeStatus=1 AND deleteStatus!=1
         ORDER BY uploadDate DESC";
         $imageResult = mysqli_query($conn, $getImages);
 
@@ -41,6 +41,14 @@
         WHERE followStatus=1 AND followerId='".$_SESSION['userId']."'";
         $followingResult = mysqli_query($conn, $getFollowing);
         $following = mysqli_num_rows($followingResult);
+
+        if(isset($_SESSION['userId']) && $_SESSION['userType']!=1){
+            echo"";
+        }
+        else {
+            header("location:home.php");
+            die();
+        }
     ?>
 
     <header>
@@ -63,7 +71,7 @@
                     <a href="notifications.php"> Notifications </a>
                     <a href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
-                    <a class="button" href="logout.php"> Logout </a>
+                    <a class="button" href="#divOne"> Logout </a>
                 </nav>
             </div>
         </div>
@@ -77,7 +85,10 @@
             <div class="personalInfo">
                 <div class="header">
                     <h1> <?php echo $account['profileName']; ?> </h1>
-                    <a href="editprofile.php"> Edit Profile </a>
+                    <div class="actions">
+                        <a href="editprofile.php"> Edit Profile </a>
+                        <a href="activityLog.php"> Logs </a>
+                    </div>
                 </div>
                 <div class="follow">
                     <p><a href="following.php"> <b> <?php echo $following; ?> </b> Following </a> </p> | 
@@ -158,6 +169,19 @@
                     }
                 }
             ?>
+        </div>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>

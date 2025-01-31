@@ -72,10 +72,6 @@ nav a {
         box-shadow: 0 0 0 1px white;
     }
 }
-nav a.active {
-    box-shadow: 0 0 0 1px white;
-    pointer-events: none;
-}
 nav a.button {
     background-color: #664343;
     border-radius: 25px;
@@ -87,112 +83,58 @@ nav a.button {
         cursor: pointer;
     }
 }
-.notification-sections {
-    display: flex;
-    flex-direction: row;
-    background-color: #424549;
-    width: 100%;
-    justify-content: center;
-}
-.link {
-    display: flex;
-    width: 34%;
-    justify-content: center;
-}
-.notification-sections a {
-    text-decoration: none;
-    color: white;
-    text-align: center;
-    width: 100%;
-    padding: 20px;
-    border-left: 1px solid #282b30;
-    border-right: 1px solid #282b30;
-    transition: .5s;
-    &:hover{
-        background-color: #36393e;
-    }
-}
-.notification-sections a.active {
-    background-color: #36393e;
-    pointer-events: none;
-}
-.all-notifications {
-    display: flex;
-    flex-direction: row;
-}
-.notification-bar{
+main {
     display: flex;
     flex-direction: column;
-    width: 34%;
-    background-color: #444546;
-    border-left: 1px solid #282b30;
-    border-right: 1px solid #282b30;
-}
-a.like-notification {
-    display: flex;
-    flex-direction: row;
     align-items: center;
+    justify-content: center;
     width: 100%;
-    color: white;
-    padding: 10px 0 10px 0;
-    text-decoration: none;
 }
-a.like-notification img.notifier-profile {
-    width: 75px;
-    height: 75px;
-    border-radius: 50px;
-    margin-left: 25px;
-}
-.notif-details {
-    margin-left: 25px;
-}
-a.like-notification img.notif-target {
-    width: auto;
-    height: 100px;
-    border-radius: 25px;
-    margin-left: 25px;
-}
-.no-notif {
-    color: white;
-    text-align: center;
-}
-p.reported {
-    background-color: #ef3b2c;
-    border: 3px solid #a50f15;
-    color: white;
-    text-align: center;
-    padding: 10px 0 10px 0;
-    margin: 0;
-}
-p.notif-type, p.date {
-    padding: 0;
-    margin: 5px 0 10px 0;
-}
-.commentWidth {
-    margin-left: 25px;
+.activitiesSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #1e2124;
     width: 40%;
+    padding: 10px;
+    border-radius: 25px;
+    margin: 20px 0 20px 0;
 }
-.detailsSection {
+main h1{
+    color: white;
+}
+a.activities {
     display: flex;
     flex-direction: row;
+    text-decoration: none;
     align-items: center;
-    transition: .5s ease;
-    &:hover{
-        background-color: #36393e;
+    color: white;
+    transition: .5s;
+    margin-top: 10px;
+    width: 90%;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-bottom: 1px solid gray;
+    &:hover {
+        background-color: #424549;
+        border-radius: 20px;
+        border: 1px solid gray;
     }
 }
-a.deleteNotif {
-    display: flex;
-    align-items: center;
+a.activities p{
+    margin: 0;
+    padding: 0;
+}
+a.activities img{
+    width: 50px;
+    height: 50px;
+    margin: 0 15px 0 15px;
+    border-radius: 25px;
+}
+p.noActivities {
     text-decoration: none;
     color: white;
-    margin: 0 10px 0 10px;
-    transition: .5s;
-    padding: 5px;
-    border-radius: 10px;
-    &:hover{
-        background-color: #a50f15;
-    }
 }
 
 .overlay {
@@ -219,11 +161,11 @@ a.deleteNotif {
 	position: relative;
 	transition: all 5s ease-in-out;
 }
-.overlay .wrapper h2 {
+.wrapper h2 {
 	margin-top: 0;
 	color: white;
 }
-.overlay .wrapper .close {
+.wrapper .close {
 	position: absolute;
 	top: 20px;
 	right: 30px;
@@ -234,22 +176,22 @@ a.deleteNotif {
 	color: #333;
     color: #795757;
 }
-.overlay .wrapper .close:hover {
+.wrapper .close:hover {
 	color: #664343;
 }
-.overlay .wrapper .content {
+.wrapper .content {
 	max-height: 30%;
 	overflow: auto;
 }
-.overlay .form-container {
+.form-container {
 	border-radius: 5px;
 	background-color: #424549;
 	padding: 20px 0;
 }
-.overlay form label {
+form label {
     color: white;
 }
-.overlay input[type=text], .overlay select, .overlay textarea {
+input[type=text], select, textarea {
     background: #1e2124;
     padding: 15px;
     margin-bottom: 30px;
@@ -263,7 +205,7 @@ a.deleteNotif {
     border-radius: 10px;
 	resize: vertical;
 }
-.overlay a.cancel {
+a.cancel {
     text-decoration: none;
     box-shadow: 0 0 0 1px white;
     color: white;
@@ -279,19 +221,10 @@ a.deleteNotif {
     }
 }
 @media screen and (max-width: 1800px /*430px*/) {
-    a.like-notification img.notifier-profile {
-        margin-left: 15px;
-    }
-    .notif-details {
-        margin-left: 15px;
-    }
-    a.like-notification img.notif-target {
-        margin-left: 15px;
-    }
-    .commentWidth {
-        width: 45%;
-    }
-    h2.notifier-name {
-        font-size: 1.2em;
+    .facebook img, .instagram img, .x img, .address img, .email img, .contact img {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        padding-left: 15px;
     }
 }

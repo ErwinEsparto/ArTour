@@ -51,6 +51,10 @@
                                 if ($newPassword==$confirmPassword){
                                     $recoverUser = "UPDATE users SET profilePassword='$encryptPassword', resetToken=NULL, resetTokenExpire=NULL WHERE profileId='$userId'";
                                     $recoverResult = mysqli_query($conn, $recoverUser);
+
+                                    $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+                                        VALUES ('".$userId."', 8, '".$userId."', now(), 0)";
+                                        $notif = mysqli_query ($conn, $notifQuery);
                                     
                                     echo "<p class='success'><b>Account recovered successfully.</b></p>";
                                 }

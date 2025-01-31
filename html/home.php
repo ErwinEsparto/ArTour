@@ -21,7 +21,8 @@
 
         $getImages = "SELECT * FROM images 
                 INNER JOIN users 
-                ON images.userId=users.profileId
+                ON images.userId=users.profileId 
+                WHERE deleteStatus!=1
                 ORDER BY uploadDate DESC";
                 $result = mysqli_query($conn, $getImages);
 
@@ -32,7 +33,8 @@
                 $selectedCategory = $category;
                 $getImages = "SELECT * FROM images 
                 INNER JOIN users 
-                ON images.userId=users.profileId
+                ON images.userId=users.profileId 
+                WHERE deleteStatus!=1
                 ORDER BY uploadDate DESC";
                 $result = mysqli_query($conn, $getImages);
             }
@@ -43,7 +45,7 @@
                 ON images.userId=users.profileId
                 JOIN categories 
                 ON images.imageId=categories.imageId
-                WHERE categories.category='$category'
+                WHERE categories.category='$category' AND deleteStatus!=1
                 ORDER BY uploadDate DESC";
                 $result = mysqli_query($conn, $getImages);
             }
@@ -73,14 +75,14 @@
                             <a href="notifications.php"> Notifications </a>
                             <a href="chats.php"> Chats </a>
                             <a href="profile.php"> Profile </a>
-                            <a class="button" href="logout.php"> Logout </a>
+                            <a class="button" href="#divOne"> Logout </a>
                         ';
                     }
                     else if ($loggedIn == true && $_SESSION['userType']==1){
                         echo '  
                             <a href="reports.php"> Reports </a>
                             <a href="userManage.php"> Accounts </a>
-                            <a class="button" href="logout.php"> Logout </a>
+                            <a class="button" href="#divOne"> Logout </a>
                         ';
                     }
                     else {
@@ -150,6 +152,19 @@
                 }
 
             ?>
+        </div>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>

@@ -47,6 +47,9 @@
 
                 <label for="password">Password</label>
                 <input type="password" id="password" minlength="8" name="password" placeholder="Password" required>
+
+                <label for="password">Confirm Password</label>
+                <input type="password" id="confirmPassword" minlength="8" name="confirmPassword" placeholder="Confirm Password" required>
                 
                 <input type="submit" name="submit" value="Register">
 
@@ -56,23 +59,48 @@
                         $email = $_POST["email"];
                         $address = $_POST["address"];
                         $number = $_POST["number"];
+
                         $password = $_POST["password"];
-                        $encryptPassword = password_hash($password, PASSWORD_BCRYPT);
+                        $confirmPassword = $_POST["confirmPassword"];
+                        $encryptPassword = password_hash($confirmPassword, PASSWORD_BCRYPT);
 
-                        $isExist = "SELECT * FROM users WHERE profileEmail='$email'";
-                        $checkExist = mysqli_query($conn, $isExist);
-                        $row = mysqli_num_rows($checkExist);
+                        if($password==$confirmPassword){
+                            $isExist = "SELECT * FROM users WHERE profileEmail='$email'";
+                            $checkExist = mysqli_query($conn, $isExist);
+                            $row = mysqli_num_rows($checkExist);
+    
+                            if ($row == 0) {
+                                $token = bin2hex(random_bytes(16));
+                                $tokenHash = hash("sha256", $token);
+                                $tokenExpire = date("Y-m-d H:i:s", time() + 60 * 30);
 
-                        if ($row == 0) {
-                            $registerUser = "INSERT INTO users (profileType, profileName, profilePassword, profileAddress, profileEmail, profileNumber, profileFacebook, profileInstagram, profileX, profilePicture, dateCreated, activeStatus) 
-                            VALUES (2, '$name', '$encryptPassword', '$address', '$email', '$number', 'Not Available', 'Not Available', 'Not Available', 'default.jpg', curdate(), 1)";
-                            $addUser = mysqli_query($conn, $registerUser);
-                            echo "<p class='success'> Successfully Registered. </p>";
-                            header("refresh: 1.5; url = login.php");
+                                $registerUser = "INSERT INTO users (profileType, profileName, profilePassword, profileAddress, profileEmail, profileNumber, profileFacebook, profileInstagram, profileX, profilePicture, dateCreated, activeStatus, verifyStatus, verifyToken, verifyTokenExpire) 
+                                VALUES (2, '$name', '$encryptPassword', '$address', '$email', '$number', 'Not Available', 'Not Available', 'Not Available', 'default.jpg', curdate(), 1, 0, '$tokenHash', '$tokenExpire')";
+                                $addUser = mysqli_query($conn, $registerUser);
+
+                                $mail = require __DIR__ . "/mailer.php";
+                                $mail->setFrom("noreply@artour.com", "ArTour");
+                                $mail->addAddress($email);
+                                $mail->Subject = "Verify Account";
+                                $mail->Body = <<<END
+                                Click <a href="http://localhost/artour/html/verifyaccount.php?token=$token">here</a> to verify your account.
+                                END;
+    
+                                try{
+                                    $mail->send();
+                                    echo "<p class='success'> Please check your inbox to verify registration. </p>";
+                                }
+                                catch (Exception $e) {
+                                    echo "<p class='error'> Message could not be sent. Mailer error: {$mail->ErrorInfo}</p>";
+                                }
+                            }
+                            else {
+                                echo "<p class='error'> Email address already taken. </p>";
+                            } 
                         }
                         else {
-                            echo "<p class='error'> Email address already taken. </p>";
-                        } 
+                            echo "<p class='error'> Passwords are not the same. </p>";
+                        }
                     }
                 ?>
 

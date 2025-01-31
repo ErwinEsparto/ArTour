@@ -9,7 +9,7 @@ $conn = mysqli_connect($DBHost, $DBUser, $DBPass, $DBName);
 
 $postId = $_GET['reportId'];
 
-$query = "UPDATE images SET reportStatus=0 WHERE imageId=$postId";
+$query = "DELETE FROM reports WHERE reportId=$postId";
 $follow = mysqli_query ($conn, $query);
 header("location:".$_SERVER['HTTP_REFERER']);
 die();

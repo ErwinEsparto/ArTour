@@ -20,6 +20,14 @@
         $getUser = "SELECT * FROM users WHERE profileId='".$_SESSION['userId']."'";
         $result = mysqli_query($conn, $getUser);
         $account = mysqli_fetch_assoc($result);
+
+        if(isset($_SESSION['userId']) && $_SESSION['userType']!=1){
+            echo"";
+        }
+        else {
+            header("location:home.php");
+            die();
+        }
     ?>
 
     <header>
@@ -42,7 +50,7 @@
                     <a href="notifications.php"> Notifications </a>
                     <a href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
-                    <a class="button" href="logout.php"> Logout </a>
+                    <a class="button" href="#divOne"> Logout </a>
                 </nav>
             </div>
         </div>
@@ -126,12 +134,16 @@
 
                             if ($fileExtension=='jpg' || $fileExtension=="JPG" || $fileExtension=="png" || $fileExtension=="PNG" ){
                                 if ($imageCategory1!=$imageCategory2 && $imageCategory1!=$imageCategory3 && $imageCategory2 != $imageCategory3) {
-                                    $uploadImg = "INSERT INTO images (imageName, imageDescription, uploadDate, reportStatus, userId) VALUES ('$newImageFile', '$imageDescription', NOW(), 0, '$userId')";
+                                    $uploadImg = "INSERT INTO images (imageName, imageDescription, uploadDate, userId) VALUES ('$newImageFile', '$imageDescription', NOW(), '$userId')";
                                     mysqli_query($conn, $uploadImg);
 
                                     $getUploadedImg = "SELECT MAX(imageId) AS imageId FROM images";
                                     $uploadedImgResult = mysqli_query($conn, $getUploadedImg);
                                     $uploadedImg = mysqli_fetch_assoc($uploadedImgResult);
+
+                                    $notifQuery = "INSERT INTO notifications (notifierId, notifType, imageId, notifiedId, notifyDate, readStatus)
+                                        VALUES ('".$_SESSION['userId']."', 12, '".(int)$uploadedImg['imageId']."', '".$_SESSION['userId']."', now(), 1)";
+                                        $notif = mysqli_query ($conn, $notifQuery);
 
                                     $addCategory1 = "INSERT INTO categories (imageId, category) VALUES (".(int)$uploadedImg['imageId'].", '$imageCategory1')";
                                     mysqli_query($conn, $addCategory1);
@@ -173,6 +185,19 @@
 
             </form>
         </section>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <script>
         const uploadimage = document.getElementById('uploadimage');

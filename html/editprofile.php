@@ -20,6 +20,14 @@
         $getUser = "SELECT * FROM users WHERE profileId='".$_SESSION['userId']."'";
         $result = mysqli_query($conn, $getUser);
         $account = mysqli_fetch_assoc($result);
+
+        if(isset($_SESSION['userId']) && $_SESSION['userType']!=1){
+            echo"";
+        }
+        else {
+            header("location:home.php");
+            die();
+        }
     ?>
 
     <header>
@@ -42,7 +50,7 @@
                     <a href="notifications.php"> Notifications </a>
                     <a href="chats.php"> Chats </a>
                     <a href="profile.php"> Profile </a>
-                    <a class="button" href="logout.php"> Logout </a>
+                    <a class="button" href="#divOne"> Logout </a>
                 </nav>
             </div>
         </div>
@@ -124,6 +132,11 @@
                                         $saveChanges = "UPDATE users SET profileName='$name', profileDescription='$description', profileAddress='$address', profileEmail='$email',
                                         profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
                                         $saveUser = mysqli_query($conn, $saveChanges);
+
+                                        $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+                                            VALUES ('".$_SESSION['userId']."', 15, '".$_SESSION['userId']."', now(), 0)";
+                                            $notif = mysqli_query ($conn, $notifQuery);
+
                                         echo "<p class='success'> Saved Successfully. </p>";
                                         header("refresh: 1; url = profile.php");
                                     }
@@ -136,6 +149,11 @@
                                             $saveChanges = "UPDATE users SET profileName='$name', profileDescription='$description', profileAddress='$address', profileEmail='$email',
                                             profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
                                             $saveUser = mysqli_query($conn, $saveChanges);
+
+                                            $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+                                            VALUES ('".$_SESSION['userId']."', 15, '".$_SESSION['userId']."', now(), 0)";
+                                            $notif = mysqli_query ($conn, $notifQuery);
+
                                             echo "<p class='success'> Saved Successfully. </p>";
                                             header("refresh: 1; url = profile.php");
                                         }
@@ -173,6 +191,11 @@
                                                     $saveChanges = "UPDATE users SET profileName='$name', profilePassword='$encryptPassword', profileDescription='$description', profileAddress='$address', profileEmail='$email',
                                                     profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
                                                     $saveUser = mysqli_query($conn, $saveChanges);
+
+                                                    $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+                                                    VALUES ('".$_SESSION['userId']."', 15, '".$_SESSION['userId']."', now(), 0)";
+                                                    $notif = mysqli_query ($conn, $notifQuery);
+
                                                     echo "<p class='success'> Saved Successfully. </p>";
                                                     header("refresh: 1; url = profile.php");
                                                 }
@@ -185,6 +208,11 @@
                                                         $saveChanges = "UPDATE users SET profileName='$name', profilePassword='$encryptPassword', profileDescription='$description', profileAddress='$address', profileEmail='$email',
                                                         profileNumber='$number', profileFacebook='$facebook', profileInstagram='$instagram', profileX='$x' WHERE profileId='".$_SESSION['userId']."'";
                                                         $saveUser = mysqli_query($conn, $saveChanges);
+
+                                                        $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+                                                        VALUES ('".$_SESSION['userId']."', 15, '".$_SESSION['userId']."', now(), 0)";
+                                                        $notif = mysqli_query ($conn, $notifQuery);
+
                                                         echo "<p class='success'> Saved Successfully. </p>";
                                                         header("refresh: 1; url = profile.php");
                                                     }
@@ -213,6 +241,19 @@
                 </div>
             </form>
         </section>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 </html>

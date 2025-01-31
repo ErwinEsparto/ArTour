@@ -19,47 +19,34 @@
         $loggedIn = $_SESSION['loggedIn'] ?? false;
         $selectedCategory = (empty($_GET['category'])) ? 'All' : '';
 
-        $getReports = "SELECT * FROM images INNER JOIN users 
-        ON images.userId=users.profileId WHERE images.reportStatus=1";
-        $reportResult = mysqli_query($conn, $getReports);
-        $rownum = mysqli_num_rows($reportResult);
+        $getImageReports = "SELECT * FROM reports JOIN users ON reports.reportedId=users.profileId 
+        JOIN images ON images.imageId=reports.imageId
+        WHERE reportType=1";
+        $imageReportResult = mysqli_query($conn, $getImageReports);
+        $rownum = mysqli_num_rows($imageReportResult);
 
-        $getUserReports = "SELECT * FROM users WHERE reportStatus=1";
-        $useReportResult = mysqli_query($conn, $getUserReports);
-        $userrownum = mysqli_num_rows($useReportResult);
+        $getUserReports = "SELECT * FROM reports INNER JOIN users 
+        ON reports.reportedId=users.profileId WHERE reportType=2";
+        $userReportResult = mysqli_query($conn, $getUserReports);
+        $userrownum = mysqli_num_rows($userReportResult);
 
         if(isset($_GET['deleteID'])){
-            $findImage = "SELECT * FROM images WHERE imageId='$_GET[deleteID]'";
-            $findResult = mysqli_query($conn, $findImage);
-            $image = mysqli_fetch_assoc($findResult);
-
-            $imageLocation = $_DIR_.'../posts/'.$image['imageName'];
-
-            if(file_exists($imageLocation)){
-                unlink($imageLocation);
-                
-                $query = "DELETE FROM images WHERE imageId='$_GET[deleteID]'";
-                $delete = mysqli_query ($conn, $query);
-
-                $deleteCategory = "DELETE FROM categories WHERE imageId='$_GET[deleteID]'";
-                $deleteC = mysqli_query ($conn, $deleteCategory);
-
-                $deleteLike = "DELETE FROM likes WHERE imageId='$_GET[deleteID]'";
-                $deleteL = mysqli_query ($conn, $deleteLike);
-
-                header("location:reports.php");
-                die();
-            }
-            else {
-                echo "<script type='text/javascript'>alert('Image Not Found!');</script>";
-                header("location:reports.php");
-                die();
-            }
+            $query = "UPDATE images SET deleteStatus=1, reportStatus=0 WHERE imageId='$_GET[deleteID]'";
+            $delete = mysqli_query ($conn, $query);
+            header("location:reports.php");
+            die();
         }
         if(isset($_GET['unreportId'])){
-            $unreportUser = "UPDATE users SET reportStatus=0 WHERE profileId='$_GET[unreportId]'";
+            $unreportUser = "DELETE FROM reports WHERE reportId='$_GET[unreportId]'";
             $unreportResult = mysqli_query ($conn, $unreportUser);
             header("location:reports.php");
+            die();
+        }
+        if(isset($_SESSION['userId']) && $_SESSION['userType']!=2){
+            echo"";
+        }
+        else {
+            header("location:home.php");
             die();
         }
     ?>
@@ -87,7 +74,7 @@
                             <a href="notifications.php"> Notifications </a>
                             <a href="chats.php"> Chats </a>
                             <a href="profile.php"> Profile </a>
-                            <a class="button" href="logout.php"> Logout </a>
+                            <a class="button" href="#divOne"> Logout </a>
                         ';
                     }
                     else if ($loggedIn == true && $_SESSION['userType']==1){
@@ -95,7 +82,7 @@
                             <a class="active" href="reports.php"> Reports </a>
                             <a href="userManage.php"> Accounts </a>
                             <a href="home.php"> Home </a>
-                            <a class="button" href="logout.php"> Logout </a>
+                            <a class="button" href="#divOne"> Logout </a>
                         ';
                     }
                     else {
@@ -115,10 +102,10 @@
             <table class="reports">
                 <thead>
                     <tr class="columns">
-                        <th>User ID</th>
                         <th>Name</th>
                         <th>Address</th>
                         <th>Email</th>
+                        <th>Reason</th>
                         <th>Link</th>
                         <th>Action</th>
                     </tr>
@@ -126,17 +113,20 @@
                 <tbody>
                 <?php
                     if($userrownum>0){
-                        while ($userReport = mysqli_fetch_assoc($useReportResult)){
+                        while ($userReport = mysqli_fetch_assoc($userReportResult)){
                             echo "
                             <tr class='report'>
-                                <td>".$userReport['profileId']." </td>
                                 <td>".$userReport['profileName']."</td>
                                 <td>".$userReport['profileAddress']." </td>
                                 <td>".$userReport['profileEmail']." </td>
-                                <td><a class='enable' target='_blank' href='viewprofile.php?profile=".$userReport['profileId']."'>View</a></td>
-                                <td> <a class='disable' href='javascript:void()' onClick='unReAlert(".$userReport['profileId'].")'> Unreport </a>
+                                <td>".$userReport['reportReason']." </td>
+                                <td><a class='enable' target='_blank' href='viewprofile.php?profile=".$userReport['reportId']."'>View</a></td>
+                                <td> <a class='disable' href='javascript:void()' onClick='unReAlert(".$userReport['reportId'].")'> Unreport </a>
                             </tr>";
                         }
+                    }
+                    else {
+                        echo "<tr><td colspan='6'> No Reported Users </td></tr>";
                     }
                     ?>
                 </tbody>
@@ -147,9 +137,9 @@
             <table class="reports">
                 <thead>
                     <tr class="columns">
-                        <th>Image ID</th>
                         <th>Uploader</th>
                         <th>Description</th>
+                        <th>Reason</th>
                         <th>Date</th>
                         <th>Link</th>
                         <th>Action</th>
@@ -158,22 +148,38 @@
                 <tbody>
                 <?php
                     if($rownum>0){
-                        while ($report = mysqli_fetch_assoc($reportResult)){
+                        while ($report = mysqli_fetch_assoc($imageReportResult)){
                             echo "
                             <tr class='report'>
-                                <td>".$report['imageId']." </td>
                                 <td>".$report['profileName']."</td>
                                 <td>".$report['imageDescription']." </td>
+                                <td>".$report['reportReason']." </td>
                                 <td>".$report['uploadDate']." </td>
                                 <td><a class='enable' target='_blank' href='viewpost.php?post=".$report['imageId']."'>View</a></td>
-                                <td> <a class='disable' href='javascript:void()' onClick='disAlert(".$report['imageId'].")'> Unreport </a> |
-                                <a class='disable' href='javascript:void()' onClick='delAlert(".$report['imageId'].")'> Delete </a> </td>
+                                <td> <a class='disable' href='javascript:void()' onClick='disAlert(".$report['reportId'].")'> Unreport </a> |
+                                <a class='disable' href='javascript:void()' onClick='delAlert(".$report['reportId'].")'> Delete </a> </td>
                             </tr>";
                         }
+                    }
+                    else {
+                        echo "<tr><td colspan='6'> No Reported Posts </td></tr>";
                     }
                     ?>
                 </tbody>
             </table>
+        </div>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>

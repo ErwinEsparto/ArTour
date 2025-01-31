@@ -12,7 +12,7 @@
         $result = mysqli_query($conn, $getUser);
         $account = mysqli_fetch_assoc($result);
 
-        $getImages = "SELECT * FROM images WHERE userId='$_GET[profile]' ORDER BY uploadDate DESC";
+        $getImages = "SELECT * FROM images WHERE userId='$_GET[profile]' AND deleteStatus!=1 ORDER BY uploadDate DESC";
         $imageResult = mysqli_query($conn, $getImages);
 
         $getFollowers = "SELECT * FROM follow 
@@ -29,17 +29,34 @@
         $followingResult = mysqli_query($conn, $getFollowing);
         $following = mysqli_num_rows($followingResult);
 
-        if(isset($_GET['reportId'])){
-            $reportUser = "UPDATE users SET reportStatus=1 WHERE profileId='$_GET[reportId]'";
-            $reportResult = mysqli_query ($conn, $reportUser);
-            header("Location: viewprofile.php?profile=" . $_GET['reportId']);
+        if(isset($_GET['unReportId'])){
+            $unReportUser = "DELETE FROM reports WHERE reporterId='".$_SESSION['userId']."' AND reportedId='".$_GET['profile']."' AND reportType=2";
+            $unReportResult = mysqli_query ($conn, $unReportUser);
+            header("Location: viewprofile.php?profile=" . $_GET['unReportId']);
             die();
         }
-        if(isset($_GET['unReportId'])){
-            $unReportUser = "UPDATE users SET reportStatus=0 WHERE profileId='$_GET[reportId]'";
-            $unReportResult = mysqli_query ($conn, $unReportUser);
-            header("Location: viewprofile.php?profile=" . $_GET['reportId']);
-            die();
+        if(isset($_GET['profile'])){
+            $existProifle = "SELECT * FROM users WHERE profileId='$_GET[profile]'";
+            $existProfileResult = mysqli_query($conn, $existProifle);
+            $isProfileExist = mysqli_num_rows($existProfileResult);
+            if ($isProfileExist>0){
+                $profile = mysqli_fetch_assoc($existProfileResult);
+                if($profile['profileId']!=$_SESSION['userId']){
+
+                }
+                else {
+                    header("location:profile.php");
+                    die();
+                }
+            }
+            else {
+                header("location:home.php");
+                die();
+            }
+        }
+        if(isset($_GET['notifId'])){
+            $updateNotif = "UPDATE notifications SET readStatus=1 WHERE notificationId='".$_GET['notifId']."'";
+            $notifUpdate = mysqli_query($conn, $updateNotif);
         }
     ?>
 
@@ -135,13 +152,17 @@
                                 </a>";
                         }
 
+                        $checkReport = "SELECT * FROM reports WHERE reporterId='".$_SESSION['userId']."' AND reportedId='".$_GET['profile']."' AND reportType=2";
+                        $checkReportResult = mysqli_query($conn, $checkReport);
+                        $checkReportRow = mysqli_num_rows($checkReportResult);
+
                         if ($_SESSION['userType']==1){
                             echo '';
                         }
-                        else if ($account['reportStatus']==0) {
+                        else if ($checkReportRow==0) {
                             echo"
-                                <a class='followOff' href='viewprofile.php?profile=".$_GET['profile']."&&reportId=".$_GET['profile']."'>
-                                    <p> Report User </p>
+                                <a class='followOff' href='#divOne'>
+                                    <p> Report </p>
                                 </a>
                                 </div>
                             ";
@@ -233,6 +254,32 @@
                     }
                 }
             ?>
+        </div>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Report Details</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Reason</label> 
+                            <textarea name="reason" maxlength='30' required placeholder="Reason for reporting"></textarea>
+                            <input type="submit" name="submit" value="Submit">
+                            <?php
+                                if(isset($_POST["submit"])){
+                                    $reason = htmlspecialchars(trim($_POST['reason'])); 
+                                    $reported = $_GET['profile'];
+                                    if(!empty($reason)){
+                                        $recordReport = "INSERT INTO reports (reportedId, reportReason, reportType, reporterId, reportDate) 
+                                        VALUES ('".$_GET['profile']."', '$reason', 2, '".$_SESSION['userId']."', now())";
+                                        $reportQuery = mysqli_query($conn, $recordReport);
+                                        echo "<p class='success'> User reported successfully. </p>";
+                                    }
+                                }
+                            ?>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>

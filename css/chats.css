@@ -185,22 +185,19 @@ h3.none {
 }
 .sendMessage form{
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
     color: white;
-    padding: 10px;
-    align-items: center;
-    background-color: #363a3f;
+    align-items: end;
 }
 img.ownerProfile, img.messenger {
     width: 50px;
     height: 50px;
     border-radius: 50px;
 }
-.sendMessage form input {
+.sendMessage form input[type="text"], .sendMessage form input[type="file"] {
     background: #424549;
     padding: 15px;
-    width: 75%;
+    width: 60%;
     border: none;
     outline: none;
     box-sizing: border-box;
@@ -209,12 +206,15 @@ img.ownerProfile, img.messenger {
     color: white;
     border-radius: 10px;
 }
+.sendMessage form input[type="file"]{
+    width: 21%;
+}
 .sendMessage form input[type="submit"] {
     background-color: #664343;
     color: white;
     padding: 15px;
     border: none;
-    width: 15%;
+    width: 10%;
     border-radius: 15px;
     transition: .7s;
     &:hover {
@@ -222,24 +222,81 @@ img.ownerProfile, img.messenger {
         cursor: pointer;
     }
 }
+.sendMessage form p.success{
+    background-color: #41ab5d;
+    border: 3px solid #005a32;
+    color: white;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0 10px 0;
+    margin-top: -5px;
+}
+.sendMessage form p.error{
+    background-color: #ef3b2c;
+    border: 3px solid #a50f15;
+    color: white;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0 10px 0;
+    margin-top: -5px;
+}
+.messageSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    padding: 10px 0 10px 0;
+    background-color: #363a3f;
+}
+#imageSection {
+    display: none;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: #363a3f;
+    padding: 10px;
+    margin: 0 10px 10px 0;
+    border-radius: 10px;
+}
+#imageSection p {
+    margin: 10px 0 10px 0;
+}
+.sendMessage form img#uploadedimage {
+    width: 200px;
+    height: auto;
+    display: none;
+    align-self: flex-end;
+}
+p.imageMessage {
+    display: flex;
+    flex-direction: column-reverse;
+}
+img.messageImage {
+    width: 200px;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
 .leftSide, .rightSide {
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: 98%;
+    max-width: 50%;
     margin: 0;
 }
 .leftSide {
     margin-left: 20px;
+    justify-self: start;
 }
 .rightSide {
-    justify-content: end;
+    justify-self: end;
 }
 .leftSide p{
     margin-left: 10px;
     padding: 10px;
     background-color: #282b30;
-    max-width: 50%;
+    width: 100%;
     color: white;
     border-radius: 15px 15px 15px 0;
 }
@@ -247,7 +304,7 @@ img.ownerProfile, img.messenger {
     margin-right: 10px;
     padding: 10px;
     background-color: #282b30;
-    max-width: 50%;
+    width: 100%;
     color: white;
     border-radius: 15px 0 15px 15px;
 }
@@ -266,22 +323,98 @@ img.ownerProfile, img.messenger {
 .nothing {
     color: gainsboro;
 }
-a.deleteComment img {
+a.deleteComment {
+    text-decoration: none;
+    color: gainsboro;
     align-self: center;
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
+    margin-right: 5px;
     border-radius: 10px;
     padding: 5px;
     &:hover {
         background-color: maroon;
     }
 }
-@media screen and (max-width: 1800px /*430px*/) {
-    .details {
-        width: 50%;
-    }
-    .details p {
-        margin: 10px 0 0 20px;
+
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.8);
+	transition: opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
+}
+.overlay:target {
+	visibility: visible;
+	opacity: 1;
+}
+.wrapper {
+	margin: 250px auto;
+	padding: 20px;
+	background: #424549;
+	border-radius: 5px;
+	width: 30%;
+	position: relative;
+	transition: all 5s ease-in-out;
+}
+.overlay .wrapper h2 {
+	margin-top: 0;
+	color: white;
+}
+.overlay .wrapper .close {
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	transition: all 200ms;
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
+    color: #795757;
+}
+.overlay .wrapper .close:hover {
+	color: #664343;
+}
+.overlay .wrapper .content {
+	max-height: 30%;
+	overflow: auto;
+}
+.overlay .form-container {
+	border-radius: 5px;
+	background-color: #424549;
+	padding: 20px 0;
+}
+.overlay form label {
+    color: white;
+}
+.overlay input[type=text], .overlay select, .overlay textarea {
+    background: #1e2124;
+    padding: 15px;
+    margin-bottom: 30px;
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    font-size: 1em;
+    color: white;
+    border-radius: 10px;
+	resize: vertical;
+}
+.overlay a.cancel {
+    text-decoration: none;
+    box-shadow: 0 0 0 1px white;
+    color: white;
+    padding: 15px;
+    margin-left: 10px;
+    border: none;
+    width: 200px;
+    border-radius: 15px;
+    transition: .7s;
+    &:hover {
+        background-color: #795757;
+        cursor: pointer;
     }
 }

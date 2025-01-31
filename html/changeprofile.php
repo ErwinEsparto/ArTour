@@ -20,6 +20,10 @@
         $getUser = "SELECT * FROM users WHERE profileId='".$_SESSION['userId']."'";
         $result = mysqli_query($conn, $getUser);
         $account = mysqli_fetch_assoc($result);
+
+        if($_SESSION['userType']!=2){
+            header("location: home.php");
+        }
     ?>
 
     <header>
@@ -42,7 +46,7 @@
                     <a href="notifications.php"> Notifications </a>
                     <a href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
-                    <a class="button" href="logout.php"> Logout </a>
+                    <a class="button" href="#divOne"> Logout </a>
                 </nav>
             </div>
         </div>
@@ -71,24 +75,19 @@
                             $imageFile = $_FILES["image"]["name"];
                             $date = date('mdY');
                             $fileExtension = pathinfo($imageFile, PATHINFO_EXTENSION);
-                            $newImageFile = pathinfo($imageFile, PATHINFO_FILENAME) . "_" . $date . "_" .time(). "." . $fileExtension;
+                            $newImageFile = $account['profileName']. "_".$date . "_" .time(). "." . $fileExtension;
                             $userId = $account["profileId"];
 
                             $imageTempName = $_FILES["image"]["tmp_name"];
                             $folder = "../profiles/";
 
                             if ($fileExtension=='jpg' || $fileExtension=="JPG" || $fileExtension=="png" || $fileExtension=="PNG" ){
-                                $getOldImg = "SELECT profilePicture FROM users WHERE profileId='".$_SESSION['userId']."'";
-                                $oldImageResult = mysqli_query($conn, $getOldImg);
-                                $oldImage = mysqli_fetch_assoc($oldImageResult);
-
-                                if($oldImage['profilePicture']!='default.jpg'){
-                                    $oldImageLocation = '../profiles/'.$oldImage['profilePicture'];
-                                    unlink($oldImageLocation);
-                                }
-                                
                                 $uploadImg = "UPDATE users SET profilePicture='$newImageFile' WHERE profileId='".$_SESSION['userId']."'";
                                 $saveProfile = mysqli_query($conn, $uploadImg);
+
+                                $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+                                    VALUES ('".$_SESSION['userId']."', 6, '".$_SESSION['userId']."', now(), 1)";
+                                $notif = mysqli_query ($conn, $notifQuery);
     
                                 $imageFilePath = $folder . $newImageFile;
                                 if (move_uploaded_file($imageTempName, $imageFilePath)) {
@@ -108,6 +107,19 @@
                 </div>
             </form>
         </section>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <script>
         const uploadimage = document.getElementById('uploadimage');

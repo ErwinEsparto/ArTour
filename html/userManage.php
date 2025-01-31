@@ -18,6 +18,14 @@
         $conn = mysqli_connect($DBHost, $DBUser, $DBPass, $DBName);
         $loggedIn = $_SESSION['loggedIn'] ?? false;
 
+        $getAdmins = "SELECT * FROM users WHERE profileType!=2 AND activeStatus!=0 AND profileId!='".$_SESSION['userId']."'";
+        $adminsResult = mysqli_query($conn, $getAdmins);
+        $adminsRow = mysqli_num_rows($adminsResult);
+
+        $getInactiveAdmins = "SELECT * FROM users WHERE profileType!=2 AND activeStatus!=1";
+        $inactiveAdminsResult = mysqli_query($conn, $getInactiveAdmins);
+        $inactiveAdminsRow = mysqli_num_rows($inactiveAdminsResult);
+
         $getUsers = "SELECT * FROM users WHERE profileType!=1 AND activeStatus!=0";
         $usersResult = mysqli_query($conn, $getUsers);
         $usersRow = mysqli_num_rows($usersResult);
@@ -84,6 +92,13 @@
             header("location:userManage.php");
             die();
         }
+        if(isset($_SESSION['userId']) && $_SESSION['userType']!=2){
+            echo"";
+        }
+        else {
+            header("location:home.php");
+            die();
+        }
     ?>
 
     <header>
@@ -109,7 +124,7 @@
                             <a href="notifications.php"> Notifications </a>
                             <a href="chats.php"> Chats </a>
                             <a href="profile.php"> Profile </a>
-                            <a class="button" href="logout.php"> Logout </a>
+                            <a class="button" href="#divOne"> Logout </a>
                         ';
                     }
                     else if ($loggedIn == true && $_SESSION['userType']==1){
@@ -117,7 +132,7 @@
                             <a href="reports.php"> Reports </a>
                             <a class="active" href="#"> Accounts </a>
                             <a href="home.php"> Home </a>
-                            <a class="button" href="logout.php"> Logout </a>
+                            <a class="button" href="#divOne"> Logout </a>
                         ';
                     }
                     else {
@@ -132,83 +147,165 @@
         </div>
     </header>
     <main>
-    <div class="table">
-        <h1> Active Users </h1>
-            <table class="reports">
-                <thead>
-                    <tr class="columns">
-                        <th>User ID</th>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Email</th>
-                        <th>Contact</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php
-                    if($usersRow>0){
-                        while ($user = mysqli_fetch_assoc($usersResult)){
-                            echo "
-                            <tr class='user'>
-                                <td>".$user['profileId']." </td>
-                                <td>".$user['profileName']."</td>
-                                <td>".$user['profileAddress']."</td>
-                                <td>".$user['profileEmail']."</td>
-                                <td>".$user['profileNumber']."</td>
-                                <td> <a class='disable' href='javascript:void()' onClick='disAlert(".$user['profileId'].")'> Deactivate </a> |
-                                <a class='disable' href='javascript:void()' onClick='delAlert(".$user['profileId'].")'> Delete </a> </td>
-                            </tr>";
+        <div class="adminContainer">
+            <div class="table">
+                <div class="adminSection">
+                <h1> Registered Admins </h1>
+                <a href="addAdmin.php"> Add more </a>
+                </div>
+                <table class="reports">
+                    <thead>
+                        <tr class="columns">
+                            <th>Admin ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        if($adminsRow>0){
+                            while ($inactiveAdmin = mysqli_fetch_assoc($adminsResult)){
+                                echo "
+                                <tr class='user'>
+                                    <td>".$inactiveAdmin['profileId']." </td>
+                                    <td>".$inactiveAdmin['profileName']."</td>
+                                    <td>".$inactiveAdmin['profileEmail']."</td>
+                                    <td> <a class='disable' href='javascript:void()' onClick='disAlert(".$inactiveAdmin['profileId'].")'> Deactivate </a> |
+                                    <a class='disable' href='javascript:void()' onClick='delAlert(".$inactiveAdmin['profileId'].")'> Delete </a> </td>
+                                </tr>";
+                            }
                         }
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        else {
+                            echo "<tr><td colspan='6'> You are the only admin. </td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table">
+                <h1> Inactive Admins </h1>
+                <table class="reports">
+                    <thead>
+                        <tr class="columns">
+                            <th>Admin ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        if($inactiveAdminsRow>0){
+                            while ($admin = mysqli_fetch_assoc($inactiveAdminsResult)){
+                                echo "
+                                <tr class='user'>
+                                    <td>".$admin['profileId']." </td>
+                                    <td>".$admin['profileName']."</td>
+                                    <td>".$admin['profileEmail']."</td>
+                                    <td> <a class='disable' href='javascript:void()' onClick='actAlert(".$admin['profileId'].")'> Activate </a> |
+                                    <a class='disable' href='javascript:void()' onClick='delAlert(".$admin['profileId'].")'> Delete </a> </td>
+                                </tr>";
+                            }
+                        }
+                        else {
+                            echo "<tr><td colspan='6'> No Inactive Admins </td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="table">
-        <h1> Banned Users </h1>
-            <table class="reports">
-                <thead>
-                    <tr class="columns">
-                        <th>User ID</th>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Email</th>
-                        <th>Contact</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php
-                    if($bannedUsersRow>0){
-                        while ($bannedUser = mysqli_fetch_assoc($bannedUsersResult)){
-                            echo "
-                            <tr class='user'>
-                                <td>".$bannedUser['profileId']." </td>
-                                <td>".$bannedUser['profileName']."</td>
-                                <td>".$bannedUser['profileAddress']."</td>
-                                <td>".$bannedUser['profileEmail']."</td>
-                                <td>".$bannedUser['profileNumber']."</td>
-                                <td> <a class='enable' href='javascript:void()' onClick='actAlert(".$bannedUser['profileId'].")'> Activate </a> |
-                                <a class='disable' href='javascript:void()' onClick='delAlert(".$bannedUser['profileId'].")'> Delete </a> </td>
-                            </tr>";
+        <div class="userSection">
+            <div class="table">
+            <h1> Active Users </h1>
+                <table class="reports">
+                    <thead>
+                        <tr class="columns">
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        if($usersRow>0){
+                            while ($user = mysqli_fetch_assoc($usersResult)){
+                                echo "
+                                <tr class='user'>
+                                    <td>".$user['profileId']." </td>
+                                    <td>".$user['profileName']."</td>
+                                    <td>".$user['profileEmail']."</td>
+                                    <td> <a class='disable' href='javascript:void()' onClick='disAlert(".$user['profileId'].")'> Deactivate </a> |
+                                    <a class='disable' href='javascript:void()' onClick='delAlert(".$user['profileId'].")'> Delete </a> </td>
+                                </tr>";
+                            }
                         }
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        else {
+                            echo "<tr><td colspan='6'> No Active Users </td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table">
+            <h1> Banned Users </h1>
+                <table class="reports">
+                    <thead>
+                        <tr class="columns">
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        if($bannedUsersRow>0){
+                            while ($bannedUser = mysqli_fetch_assoc($bannedUsersResult)){
+                                echo "
+                                <tr class='user'>
+                                    <td>".$bannedUser['profileId']." </td>
+                                    <td>".$bannedUser['profileName']."</td>
+                                    <td>".$bannedUser['profileEmail']."</td>
+                                    <td> <a class='enable' href='javascript:void()' onClick='actAlert(".$bannedUser['profileId'].")'> Activate </a> |
+                                    <a class='disable' href='javascript:void()' onClick='delAlert(".$bannedUser['profileId'].")'> Delete </a> </td>
+                                </tr>";
+                            }
+                        }
+                        else {
+                            echo "<tr><td colspan='6'> No Banned Users </td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>
 <script>
         function disAlert(id){
-            sts = confirm ("Are you sure you want to deactivate this user?");
+            sts = confirm ("Are you sure you want to deactivate this account?");
             if (sts){
                 document.location.href=`userManage.php?deactivateId=${id}`;
             }
         }
         function actAlert(id){
-            sts = confirm ("Are you sure you want to activate this user?");
+            sts = confirm ("Are you sure you want to activate this account?");
             if (sts){
                 document.location.href=`userManage.php?activateId=${id}`;
             }

@@ -384,3 +384,95 @@ a.deleteComment img {
     border-radius: 15px;
     margin: 0 0 10px 10px;
 }
+form p.success{
+    background-color: #41ab5d;
+    border: 3px solid #005a32;
+    color: white;
+    text-align: center;
+    width: 99%;
+    padding: 10px 0 10px 0;
+    margin-top: 5px;
+    text-align: center
+}
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.8);
+	transition: opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
+}
+.overlay:target {
+	visibility: visible;
+	opacity: 1;
+}
+.wrapper {
+	margin: 150px auto;
+	padding: 20px;
+	background: #424549;
+	border-radius: 5px;
+	width: 30%;
+	position: relative;
+	transition: all 5s ease-in-out;
+}
+.wrapper h2 {
+	margin-top: 0;
+	color: white;
+}
+.wrapper .close {
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	transition: all 200ms;
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
+    color: #795757;
+}
+.wrapper .close:hover {
+	color: #664343;
+}
+.wrapper .content {
+	max-height: 30%;
+	overflow: auto;
+}
+.form-container {
+	border-radius: 5px;
+	background-color: #424549;
+	padding: 20px 0;
+}
+form label {
+	text-transform: uppercase;
+    color: white;
+}
+input[type=text], select, textarea {
+    background: #1e2124;
+    padding: 15px;
+    margin-bottom: 30px;
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    font-size: 1em;
+    color: white;
+    border-radius: 10px;
+	resize: vertical;
+}
+input[type="submit"] {
+	background-color: #664343;
+    color: white;
+    padding: 15px;
+    border: none;
+    width: 100%;
+    border-radius: 15px;
+    transition: .7s;
+    &:hover {
+        background-color: #795757;
+        cursor: pointer;
+    }
+}

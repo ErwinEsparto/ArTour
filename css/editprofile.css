@@ -92,19 +92,19 @@ main {
     justify-content: center;
     align-items: center;
 }
-form {
+.form form {
     display: flex;
     flex-direction: row;
     margin: 20px;
     height: 90%;
     width: 90%;
 }
-form h1 {
+.form form h1 {
     font-size: 2.5em;
     color: white;
     text-align: center;
 }
-form input, form textarea {
+.form form input, .form form textarea {
     background: #424549;
     padding: 15px;
     margin-bottom: 30px;
@@ -117,7 +117,7 @@ form input, form textarea {
     color: white;
     border-radius: 10px;
 }
-textarea {
+.form textarea {
     height: 100px;
     resize: none;
 }
@@ -143,7 +143,7 @@ textarea {
     flex-direction: column;
     justify-content: center;
 }
-form input[type="submit"] {
+.form form input[type="submit"] {
     background-color: #664343;
     color: white;
     padding: 15px;
@@ -156,7 +156,7 @@ form input[type="submit"] {
         cursor: pointer;
     }
 }
-form p.success{
+.form form p.success{
     background-color: #41ab5d;
     border: 3px solid #005a32;
     color: white;
@@ -165,7 +165,7 @@ form p.success{
     padding: 10px 0 10px 0;
     margin-top: -5px;
 }
-form p.error{
+.form form p.error{
     background-color: #ef3b2c;
     border: 3px solid #a50f15;
     color: white;
@@ -183,6 +183,90 @@ form p.error{
     &:hover {
         text-decoration: underline;
         color: #795757;
+        cursor: pointer;
+    }
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.8);
+	transition: opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
+}
+.overlay:target {
+	visibility: visible;
+	opacity: 1;
+}
+.wrapper {
+	margin: 250px auto;
+	padding: 20px;
+	background: #424549;
+	border-radius: 5px;
+	width: 30%;
+	position: relative;
+	transition: all 5s ease-in-out;
+}
+.overlay .wrapper h2 {
+	margin-top: 0;
+	color: white;
+}
+.overlay .wrapper .close {
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	transition: all 200ms;
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
+    color: #795757;
+}
+.overlay .wrapper .close:hover {
+	color: #664343;
+}
+.overlay .wrapper .content {
+	max-height: 30%;
+	overflow: auto;
+}
+.overlay .form-container {
+	border-radius: 5px;
+	background-color: #424549;
+	padding: 20px 0;
+}
+.overlay form label {
+    color: white;
+}
+.overlay input[type=text], .overlay select, .overlay textarea {
+    background: #1e2124;
+    padding: 15px;
+    margin-bottom: 30px;
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Century Gothic";
+    font-size: 1em;
+    color: white;
+    border-radius: 10px;
+	resize: vertical;
+}
+.overlay a.cancel {
+    text-decoration: none;
+    box-shadow: 0 0 0 1px white;
+    color: white;
+    padding: 15px;
+    margin-left: 10px;
+    border: none;
+    width: 200px;
+    border-radius: 15px;
+    transition: .7s;
+    &:hover {
+        background-color: #795757;
         cursor: pointer;
     }
 }

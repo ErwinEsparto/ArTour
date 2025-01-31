@@ -59,21 +59,30 @@
                             $user=mysqli_fetch_assoc($userResult);
                             $userPassword = $user['profilePassword'];
 
-                            if (password_verify($password, $userPassword)){
-                                if ($user['activeStatus']==1){
-                                    $_SESSION['userId'] = $user['profileId'];
-                                    $_SESSION['userType'] = $user['profileType'];
-                                    $_SESSION['loggedIn'] = true;
-        
-                                    header("location: home.php");
-                                    exit();
+                            if($user['verifyStatus']==1){
+                                if (password_verify($password, $userPassword)){
+                                    if ($user['activeStatus']==1){
+                                        $notifQuery = "INSERT INTO notifications (notifierId, notifType, notifiedId, notifyDate, readStatus)
+                                            VALUES ('".$user['profileId']."', 9, '".$user['profileId']."', now(), 1)";
+                                            $notif = mysqli_query ($conn, $notifQuery);
+                                            
+                                        $_SESSION['userId'] = $user['profileId'];
+                                        $_SESSION['userType'] = $user['profileType'];
+                                        $_SESSION['loggedIn'] = true;
+            
+                                        header("location: home.php");
+                                        exit();
+                                    }
+                                    else {
+                                        echo "<p class='result'> You have been banned from using ArTour. <br> Contact admin to reactivate your account. </p>";
+                                    }
                                 }
                                 else {
-                                    echo "<p class='result'> You have been banned from using ArTour. <br> Contact admin to reactivate your account. </p>";
+                                    echo "<p class='result'> Invalid Password. </p>";
                                 }
                             }
                             else {
-                                echo "<p class='result'> Invalid Password. </p>";
+                                echo "<p class='result'> Account not verified. </p>";
                             }
                         } 
                         else {

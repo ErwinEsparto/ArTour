@@ -23,6 +23,13 @@
         WHERE followStatus=1 AND followerId='".$_SESSION['userId']."'";
         $followingResult = mysqli_query($conn, $getFollowing);
         
+        if(isset($_SESSION['userId']) && $_SESSION['userType']!=1){
+            echo"";
+        }
+        else {
+            header("location:home.php");
+            die();
+        }
     ?>
 
     <header>
@@ -45,7 +52,7 @@
                     <a href="notifications.php"> Notifications </a>
                     <a href="chats.php"> Chats </a>
                     <a href="profile.php"> Profile </a>
-                    <a class="button" href="logout.php"> Logout </a>
+                    <a class="button" href="#divOne"> Logout </a>
                 </nav>
             </div>
         </div>
@@ -89,6 +96,19 @@
                 }
             
             ?>
+        </div>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>

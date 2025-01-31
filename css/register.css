@@ -20,6 +20,9 @@ main {
 }
 .form h1{
     font-size: 2.5em;
+    padding: 0;
+    margin: 0 0 10px 0;
+    padding: 0;
     color: white;
     text-align: center;
 }
@@ -37,7 +40,7 @@ main {
 .form form input {
     background: #424549;
     padding: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     width: 100%;
     border: none;
     outline: none;

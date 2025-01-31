@@ -24,6 +24,29 @@
         $getPost = "SELECT * FROM images WHERE imageId='$_GET[post]'";
         $postResult = mysqli_query($conn, $getPost);
         $post = mysqli_fetch_assoc($postResult);
+
+        if(isset($_GET['post'])){
+            $existImage = "SELECT * FROM images WHERE imageId='$_GET[post]' AND deleteStatus!=1";
+            $existImageResult = mysqli_query($conn, $existImage);
+            $isImageExist = mysqli_num_rows($existImageResult);
+            if($_SESSION['userId']==$post['userId']){
+                if ($isImageExist>0){
+    
+                }
+                else {
+                    header("location:home.php");
+                    die();
+                }
+            }
+            else {
+                header("location:home.php");
+                die();
+            }
+        }
+        else {
+            header("location:home.php");
+            die();
+        }
     ?>
 
     <header>
@@ -46,7 +69,7 @@
                     <a href="notifications.php"> Notifications </a>
                     <a href="chats.php"> Chats </a>
                     <a href="home.php"> Home </a>
-                    <a class="button" href="logout.php"> Logout </a>
+                    <a class="button" href="#divOne"> Logout </a>
                 </nav>
             </div>
         </div>
@@ -168,8 +191,12 @@
                             $imageId = $_GET["post"];
 
                             if ($imageCategory1!=$imageCategory2 && $imageCategory1!=$imageCategory3 && $imageCategory2 != $imageCategory3) {
-                                $updateImg = "UPDATE images SET imageDescription='$imageDescription' WHERE imageId='$imageId'"; //Upload Date?
+                                $updateImg = "UPDATE images SET imageDescription='$imageDescription', uploadDate=now() WHERE imageId='$imageId'";
                                 mysqli_query($conn, $updateImg);
+
+                                $notifQuery = "INSERT INTO notifications (notifierId, notifType, imageId, notifiedId, notifyDate, readStatus)
+                                    VALUES ('".$_SESSION['userId']."', 7, '".$_GET['post']."', '".$_SESSION['userId']."', now(), 1)";
+                                $notif = mysqli_query ($conn, $notifQuery);
 
                                 $addCategory1 = "UPDATE categories SET category='$imageCategory1' WHERE imageId='$imageId' LIMIT 1";
                                 mysqli_query($conn, $addCategory1);
@@ -201,9 +228,21 @@
                 <div id="imageSection" class="column">
                 <img src="../posts/<?php echo $post['imageName']; ?>" id="uploadedimage">
                 </div>
-
             </form>
         </section>
+        <div class="overlay" id="divOne">
+            <div class="wrapper">
+                <h2>Logout</h2><a class="close" href="#">&times;</a>
+                <div class="content">
+                    <div class="form-container">
+                        <form method="POST" enctype="multipart/form-data">
+                            <label>Are you sure you want to logout?</label> 
+                            <a class='cancel' href="logout.php"> Logout </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 </html>
