@@ -106,6 +106,8 @@ nav a.button {
 main {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 .categories a.active {
     color: #795757;
@@ -274,5 +276,19 @@ main {
     &:hover {
         background-color: #795757;
         cursor: pointer;
+    }
+}
+a.more {
+    text-decoration: none;
+    color: white;
+    border: 1px solid white;
+    padding: 20px 0 20px 0;
+    width: 60%;
+    text-align: center;
+    border-radius: 25px;
+    transition: .5s ease;
+    margin: 5px 0 15px 0;
+    &:hover {
+        background-color: #795757;
     }
 }

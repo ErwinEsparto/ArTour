@@ -19,11 +19,19 @@
         $loggedIn = $_SESSION['loggedIn'] ?? false;
         $selectedCategory = (empty($_GET['category'])) ? 'All' : '';
 
+        $_SESSION['imagesLimit'] = 8;
+        if (isset($_GET['more'])){
+            $_SESSION['imagesLimit'] += $_GET['more'];
+        }
+        else {
+            $_SESSION['imagesLimit'] = 8;
+        }
+
         $getImages = "SELECT * FROM images 
                 INNER JOIN users 
                 ON images.userId=users.profileId 
                 WHERE deleteStatus!=1
-                ORDER BY uploadDate DESC";
+                ORDER BY uploadDate DESC LIMIT ".$_SESSION['imagesLimit']."";
                 $result = mysqli_query($conn, $getImages);
 
         $sessionExpiration = 1800;
@@ -44,7 +52,7 @@
                 INNER JOIN users 
                 ON images.userId=users.profileId 
                 WHERE deleteStatus!=1
-                ORDER BY uploadDate DESC";
+                ORDER BY uploadDate DESC LIMIT ".$_SESSION['imagesLimit']."";
                 $result = mysqli_query($conn, $getImages);
             }
             else {
@@ -55,7 +63,7 @@
                 JOIN categories 
                 ON images.imageId=categories.imageId
                 WHERE categories.category='$category' AND deleteStatus!=1
-                ORDER BY uploadDate DESC";
+                ORDER BY uploadDate DESC LIMIT ".$_SESSION['imagesLimit']."";
                 $result = mysqli_query($conn, $getImages);
             }
         }
@@ -162,6 +170,51 @@
 
             ?>
         </div>
+        <?php
+            $getImagesRow = "SELECT * FROM images WHERE deleteStatus!=1";
+            $imagesRowResult = mysqli_query($conn, $getImagesRow);
+            $maxImagesRow = mysqli_num_rows($imagesRowResult);
+            $maxFilterImagesRow = mysqli_num_rows($result);
+
+            if (isset($_GET['category'])){
+                if(isset($_GET['more'])){
+                    if ($maxFilterImagesRow>$_GET['more']){
+                        $newLimit = $_GET['more'] + 8;
+                        echo "<a class='more' href='home.php?category=".$_GET['category']."&&more=$newLimit'> Load More </a>";
+                    }
+                    else {
+                        echo "";
+                    }
+                }
+                else {
+                    if ($maxFilterImagesRow>8){
+                        echo "<a class='more' href='home.php?category=".$_GET['category']."&&more=8'> Load More </a>";
+                    }
+                    else {
+                        echo "";
+                    }
+                }
+            }
+            else {
+                if(isset($_GET['more'])){
+                    if ($maxImagesRow>$_GET['more']){
+                        $newLimit = $_GET['more'] + 8;
+                        echo "<a class='more' href='home.php?more=$newLimit'> Load More </a>";
+                    }
+                    else {
+                        echo "";
+                    }
+                }
+                else {
+                    if ($maxImagesRow>8){
+                        echo "<a class='more' href='home.php?more=8'> Load More </a>";
+                    }
+                    else {
+                        echo "";
+                    }
+                }
+            }
+        ?>
         <div class="overlay" id="divOne">
             <div class="wrapper">
                 <h2>Logout</h2><a class="close" href="#">&times;</a>
