@@ -22,6 +22,15 @@
         $activitiesResult = mysqli_query($conn, $getActivities);
         $activitiesRow = mysqli_num_rows($activitiesResult);
 
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
+
         if($_SESSION['userType']!=2){
             header("location: home.php");
         }

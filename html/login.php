@@ -69,6 +69,7 @@
                                         $_SESSION['userId'] = $user['profileId'];
                                         $_SESSION['userType'] = $user['profileType'];
                                         $_SESSION['loggedIn'] = true;
+                                        $_SESSION['latestActivity'] = time();
             
                                         header("location: home.php");
                                         exit();

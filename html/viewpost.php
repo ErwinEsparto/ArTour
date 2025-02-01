@@ -23,6 +23,15 @@
     $totalLikesResult = mysqli_query($conn, $getTotalLikes);
     $totalLikes = mysqli_num_rows($totalLikesResult);
 
+    $sessionExpiration = 1800;
+    if ($loggedIn==true){
+        if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+            header("Location: logout.php");
+            exit();
+        }
+        $_SESSION['latestActivity'] = time();
+    }
+
     if(isset($_GET['post'])){
         $existImage = "SELECT * FROM images WHERE imageId='$_GET[post]' AND deleteStatus!=1";
         $existImageResult = mysqli_query($conn, $existImage);

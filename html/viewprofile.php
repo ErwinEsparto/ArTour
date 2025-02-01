@@ -29,6 +29,15 @@
         $followingResult = mysqli_query($conn, $getFollowing);
         $following = mysqli_num_rows($followingResult);
 
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
+
         if(isset($_GET['unReportId'])){
             $unReportUser = "DELETE FROM reports WHERE reporterId='".$_SESSION['userId']."' AND reportedId='".$_GET['profile']."' AND reportType=2";
             $unReportResult = mysqli_query ($conn, $unReportUser);

@@ -34,6 +34,15 @@
         $bannedUsersResult = mysqli_query($conn, $getBannedUsers);
         $bannedUsersRow = mysqli_num_rows($bannedUsersResult);
 
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
+
         if(isset($_GET['deleteID'])){
             $userChats = "DELETE FROM chats WHERE messengerId='$_GET[deleteID]' OR receiverId='$_GET[deleteID]'";
             $deleteChats = mysqli_query ($conn, $userChats);

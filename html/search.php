@@ -21,6 +21,15 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $search = htmlspecialchars($_POST['search']);
         }
+        
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
     ?>
 
     <header>

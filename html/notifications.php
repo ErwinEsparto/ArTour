@@ -36,6 +36,15 @@
         $notificationFollowsResult = mysqli_query($conn, $getFollowsNotifications);
         $notificationFollowsRow = mysqli_num_rows($notificationFollowsResult);
 
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
+
         if(isset($_GET['notifId'])){
             $deleteNotif = "DELETE FROM notifications WHERE notificationId='".$_GET['notifId']."'";
             $deleteResult = mysqli_query($conn, $deleteNotif);

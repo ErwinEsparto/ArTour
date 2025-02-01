@@ -26,6 +26,15 @@
                 ORDER BY uploadDate DESC";
                 $result = mysqli_query($conn, $getImages);
 
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
+
         if(isset($_GET['category'])){
             $category = $_GET['category'];
 

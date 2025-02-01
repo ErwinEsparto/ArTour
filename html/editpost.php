@@ -25,6 +25,17 @@
         $postResult = mysqli_query($conn, $getPost);
         $post = mysqli_fetch_assoc($postResult);
 
+        $loggedIn = $_SESSION['loggedIn'] ?? false;
+
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
+
         if(isset($_GET['post'])){
             $existImage = "SELECT * FROM images WHERE imageId='$_GET[post]' AND deleteStatus!=1";
             $existImageResult = mysqli_query($conn, $existImage);

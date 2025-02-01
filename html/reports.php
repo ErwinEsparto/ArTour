@@ -30,6 +30,15 @@
         $userReportResult = mysqli_query($conn, $getUserReports);
         $userrownum = mysqli_num_rows($userReportResult);
 
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
+
         if(isset($_GET['deleteID'])){
             $query = "UPDATE images SET deleteStatus=1, reportStatus=0 WHERE imageId='$_GET[deleteID]'";
             $delete = mysqli_query ($conn, $query);

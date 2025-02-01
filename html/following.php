@@ -22,6 +22,17 @@
         ON follow.followedId=users.profileId
         WHERE followStatus=1 AND followerId='".$_SESSION['userId']."'";
         $followingResult = mysqli_query($conn, $getFollowing);
+
+        $loggedIn = $_SESSION['loggedIn'] ?? false;
+
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
         
         if(isset($_SESSION['userId']) && $_SESSION['userType']!=1){
             echo"";

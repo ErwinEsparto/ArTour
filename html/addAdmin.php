@@ -17,6 +17,15 @@
         $DBName = "artourdb";
         $conn = mysqli_connect($DBHost, $DBUser, $DBPass, $DBName);
         $loggedIn = $_SESSION['loggedIn'] ?? false;
+
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
         
         if($_SESSION['userType']!=1){
             header("location: home.php");

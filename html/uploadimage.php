@@ -21,6 +21,17 @@
         $result = mysqli_query($conn, $getUser);
         $account = mysqli_fetch_assoc($result);
 
+        $loggedIn = $_SESSION['loggedIn'] ?? false;
+
+        $sessionExpiration = 1800;
+        if ($loggedIn==true){
+            if (isset($_SESSION['latestActivity']) && (time() - $_SESSION['latestActivity']) > $sessionExpiration) {
+                header("Location: logout.php");
+                exit();
+            }
+            $_SESSION['latestActivity'] = time();
+        }
+        
         if(isset($_SESSION['userId']) && $_SESSION['userType']!=1){
             echo"";
         }
